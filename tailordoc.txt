@@ -1,25 +1,26 @@
 ###DEFINITIONS###
 
-> class <name> = [string array] or class + class
-> input
-> evaluate <buffer index>
-> bool = <buffer index> <flags> <regex> or <bool> <bool operation> <bool> or not <bool>
+> type <name> = [string array] or type + type
+> gather
+> hem <fabric index>
+> condition = <fabric index> <flags> <regex> or <bool> <bool operation> <bool> or not <bool>
 > if/while <bool> {
 > 	...content...
 > }
-> dye <buffer> <color index>
-> goto <line number>
-> write <buffer index (not "input")> <flags> <string>
-> copy <buffer index (not "output")> <flags> <regex> <buffer index (not "input")>
-> modify <buffer index (not "input")> <flags> <regex> <replace>
-> transliterate <buffer index (not "input")> <flags> <class> <class>
-> function <name> (<buffer arguments>) {
+> notch
+> dye <fabric> <color index>
+> see <line number/notch index>
+> embroider <fabric index (not "input")> <flags> <string>
+> move <fabric index (not "output")> <flags> <regex> <fabric index (not "input")>
+> alter <fabric index (not "input")> <flags> <regex> <replace>
+> replace <fabric index (not "input")> <flags> <type> <type>
+> procedure <name> (<fabric arguments>) {
 >	...content...
 > }
-> output
-> halt
-> exit
-call <function name> (<buffer indexes (not "input")>)
+> sell
+> stop
+> end
+> do <procedure name> (<fabric indexes (not "input")>)
 
 ###FLAGS###
 -p : prepend string instead of overwriting match
@@ -27,15 +28,15 @@ call <function name> (<buffer indexes (not "input")>)
 
 ###EXAMPLES###
 
-function reverse (buffer){
-	bool check = buffer -g /^[?]+.?$/ update
+function reverse (fabric){
+	bool check = fabric -g /^[?]+.?$/ update
 	bool invcheck = not check update
 	while invcheck {
-		modify buffer -gp /^./ ">"
-		modify buffer -g /(>.)(.+[?]?)(.+)/ "$2$1?$3"
-		modify buffer - /[>]/ "?"
+		modify fabric -gp /^./ ">"
+		modify fabric -g /(>.)(.+[?]?)(.+)/ "$2$1?$3"
+		modify fabric - /[>]/ "?"
 	}
-	modify buffer -g /[?]/ ""
+	modify fabric -g /[?]/ ""
 }
 
 #Foobar should return rabooF

@@ -2,9 +2,6 @@
 #Tailor, and this interpreter, is by cyanidesDuality.
 #Much help was provided by LyricLy.
 
-#TODO:  
-#	 : Make input read-only and output write-only
-
 import ast
 import re
 import sys
@@ -12,35 +9,35 @@ def ansify(s,esc):
 	return ("\u001b[38;5;" + str(esc) + "m" + s + "\u001b[0m")
 
 program = """
-#Program for reversing given buffer
-function shunt (buffer1, buffer2) {
-	copy buffer1 -p /./ buffer2
-	modify buffer1 - /./ ""
+#Program for reversing given fabric
+procedure shunt (fabric1, fabric2) {
+	move fabric1 -p /./ fabric2
+	alter fabric1 - /./ ""
 }
 
-function reverse (buffer){
-	bool some = buffer - /./ update
-	write revbuff - ""
+procedure reverse (fabric){
+	condition some = fabric - /./ update
+	embroider revfab - ""
 	while some {
-		call shunt (buffer, revbuff)
+		do shunt (fabric, revfab)
 	}
-	copy revbuff - // buffer
+	move revbuff - // fabric
 }
 
-input
-copy input - // reversing
-call reverse (reversing)
-copy reversing - // output
-output
+gather
+copy materials - // reversing
+do reverse (reversing)
+copy reversing - // garment
+sell
 """
 # program = """
 # #Program for signum; breaks with decimals between 0 and 1, and numbers with leading zeroes
-# input
-# copy input - /./ cut
-# modify cut - /-/ "-1"
-# modify cut - /[2-9]/ "1"
-# copy cut - // output
-# output
+# gather
+# move materials - /./ cut
+# alter cut - /-/ "-1"
+# alter cut - /[2-9]/ "1"
+# move cut - // garment
+# sell
 # """
 
 program_split = program.split("\n")
@@ -123,7 +120,7 @@ def updateBool(name, boollist, bufflist):
 	return True
 
 def getval(name, key, frame, default, outscope=True):
-	if name == "output" and key == "buffers":
+	if name == "garment" and key == "buffers":
 		return default
 	if frame == None:
 		return default
@@ -140,7 +137,7 @@ def getval(name, key, frame, default, outscope=True):
 			val = default
 	return val
 def writeval(name, key, frame, value, base=True, outscope=True):
-	if name == "input" and key == "buffers":
+	if name == "materials" and key == "buffers":
 		return None
 	if frame == None:
 		return None
@@ -189,7 +186,7 @@ def updateAllDeep(frame):
 def interpret(tointerpret,debug,prevframe,prevargs={}):
 	frame = {
 		"pointer" : 0,
-		"buffers" : {"input": "", "output": ""},
+		"buffers" : {"materials": "", "garment": ""},
 		"labels" : {},
 		"classes" : {},
 		"functions" : {},
@@ -204,11 +201,11 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 		command = line[0]
 		if debug:
 			print("\n\n\n")
-			print("Functions:",frame['functions'])
-			print("Labels:",frame['labels'])
-			print("Classes:",frame['classes'])
-			print("Buffers:",frame['buffers'])
-			print("Booleans:",frame['bools'])
+			print("Prodecures:",frame['functions'])
+			print("Notches:",frame['labels'])
+			print("Types:",frame['classes'])
+			print("Fabrics:",frame['buffers'])
+			print("Conditions:",frame['bools'])
 			print("Current command:",command)
 			print("Current line:\n",line)
 			wait = input("Press Enter key to continue, or press any key and enter to stop execution.\n")
@@ -216,19 +213,19 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 				sys.exit(0)
 
 
-		if command == "label":
+		if command == "notch":
 			writeval(line[1], "labels", frame, pointer, outscope=False)
 
 
 
 
-		elif command == "exit":
+		elif command == "end":
 			frame["pointer"] = len(tointerpret)
 
 
 
 
-		elif command == "goto":
+		elif command == "see":
 			try:
 				frame["pointer"] = int(line[1])
 			except ValueError:
@@ -296,7 +293,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 
 
 
-		elif command == "bool":
+		elif command == "condition":
 			try:
 				update = line[6] == "update"
 			except IndexError:
@@ -315,7 +312,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 
 
 
-		elif command == "write":
+		elif command == "embroider":
 			flags = [f for f in flaglist(line[2]) if f in ["a","p"]]
 			if "a" in flags:
 				writeval(line[1], "buffers", frame, getval(line[1], "buffers", frame, "") + line[3])
@@ -327,19 +324,19 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 
 
 
-		elif command == "input":
-			frame["buffers"]["input"] = input("Program Input: ")
+		elif command == "gather":
+			frame["buffers"]["materials"] = input("Program Input: ")
 			frame["pointer"] += 1
 
 
-		elif command == "evaluate":
+		elif command == "hem":
 			writeval(line[1], "buffers", frame, ast.literal_eval('"'+getval(line[1], "buffers", frame, "")+'"'))
 			frame["pointer"] += 1
 
 
-		elif command == "output":
-			print(frame["buffers"]["output"])
-			writeval("output", "buffers", frame, "")
+		elif command == "sell":
+			print(frame["buffers"]["garment"])
+			writeval("garment", "buffers", frame, "")
 			frame["pointer"] += 1
 
 
@@ -368,11 +365,11 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 			frame['pointer'] += 1
 
 
-		elif command == "halt":
+		elif command == "stop":
 			sys.exit(0)
 
 
-		elif command == "function":
+		elif command == "procedure":
 			counter = 1
 			pos = frame['pointer'] + 1
 			while counter > 0 and pos < len(tointerpret):
@@ -392,7 +389,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 
 
 
-		elif command == "class":
+		elif command == "type":
 			linec = line[:]
 			linec = linec[3:]
 			classadd = []
@@ -408,7 +405,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 			frame['pointer'] += 1
 
 
-		elif command == "transliterate":
+		elif command == "replace":
 			buffi = line[1]
 			buff = getval(buffi, "buffers", frame, "")
 			flags = flaglist(line[2])
@@ -448,7 +445,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 
 
 
-		elif command == "copy":
+		elif command == "move":
 			fr = line[1]
 			frbuff = getval(fr, "buffers", frame, "")
 			to = line[4]
@@ -493,7 +490,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 
 
 
-		elif command == "modify":
+		elif command == "alter":
 			fr = line[1]
 			frbuff = getval(fr, "buffers", frame, "")
 			to = line[4]
@@ -545,7 +542,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 					char += 1
 				writeval(fr, "buffers", frame, build)
 			frame['pointer'] += 1
-		elif command == "call":
+		elif command == "do":
 			func = getval(line[1], "functions", frame, "")
 			code = func["code"][:]
 			args = func["arguments"]

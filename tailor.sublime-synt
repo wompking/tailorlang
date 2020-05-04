@@ -1,0 +1,62 @@
+%YAML 1.2
+---
+name: Tailor
+file_extensions: [tl, tail]
+scope: source.tailor
+
+buffers:
+
+  name: '[a-zA-Z_][a-zA-Z_0-9]*'
+
+contexts:
+
+  main:
+
+    - match: '\#'
+      scope: punctuation.definition.comment.tail
+      push: comment_line
+
+    - match: '"'
+      scope: punctuation.definition.string.begin.tail
+      push: string
+
+    - match: '\{'
+      scope: punctuation.section.block.begin.tail
+      push: curly_block
+
+    - match: '\}'
+      scope: invalid.illegal.stray-bracket-end.tail
+
+    - match: '/.*/'
+      scope: regex.definition.tail
+
+  comment_line:
+
+    - meta_scope: comment.line.tail
+
+    - match: '\#|$'
+      pop: true
+
+  double_quoted_string:
+
+    - meta_scope: string.quoted.double.tail
+
+    - match: '\\x[0-9a-fA-F]{2}'
+      scope: constant.character.escape.tail
+
+    - match: '\\0|\\\\|\\a|\\b|\\n|\\t|\\r|\\v'
+      scope: constant.character.escape.tail
+
+    - match: '"'
+      scope: punctuation.definition.string.end.tail
+      pop: true
+
+  curly_block:
+
+    - meta_scope: meta.block.tail
+
+    - match: '\}'
+      scope: punctuation.section.block.end.tail
+      pop: true
+
+    - include: main

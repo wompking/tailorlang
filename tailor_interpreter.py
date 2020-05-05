@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 #An implementation of Tailor in Python.
 #Tailor, and this interpreter, is by cyanidesDuality.
 #Much help was provided by LyricLy.
@@ -5,31 +7,39 @@
 import ast
 import re
 import sys
+
+if len(sys.argv) < 2:
+	print("Usage: tailor <file>")
+	sys.exit(-1)
+
+program = open(sys.argv[1]).read();
+
+
 def ansify(s,esc):
 	return ("\u001b[38;5;" + str(esc) + "m" + s + "\u001b[0m")
 
-program = """
-#Program for reversing given fabric
-procedure shunt (fabric1, fabric2) {
-	move fabric1 -p /./ fabric2
-	alter fabric1 - /./ ""
-}
+# program = """
+# #Program for reversing given fabric
+# procedure shunt (fabric1, fabric2) {
+# 	move fabric1 -p /./ fabric2
+# 	alter fabric1 - /./ ""
+# }
 
-procedure reverse (fabric){
-	condition some = fabric - /./ update
-	embroider revfab - ""
-	while some {
-		do shunt (fabric, revfab)
-	}
-	move revbuff - // fabric
-}
+# procedure reverse (fabric){
+# 	condition some = fabric - /./ update
+# 	embroider revfab - ""
+# 	while some {
+# 		do shunt (fabric, revfab)
+# 	}
+# 	move revbuff - // fabric
+# }
 
-gather
-copy materials - // reversing
-do reverse (reversing)
-copy reversing - // garment
-sell
-"""
+# gather
+# copy materials reversing
+# do reverse (reversing)
+# copy reversing garment
+# sell
+# """
 # program = """
 # #Program for signum; breaks with decimals between 0 and 1, and numbers with leading zeroes
 # gather
@@ -119,8 +129,8 @@ def updateBool(name, boollist, bufflist):
 			boollist[name]["value"] == False
 	return True
 
-def getval(name, key, frame, default, outscope=True):
-	if name == "garment" and key == "buffers":
+def getval(name, key, frame, default, outscope=True, ignore=False):
+	if name == "garment" and key == "buffers" and not ignore:
 		return default
 	if frame == None:
 		return default
@@ -201,7 +211,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 		command = line[0]
 		if debug:
 			print("\n\n\n")
-			print("Prodecures:",frame['functions'])
+			print("Procedures:",frame['functions'])
 			print("Notches:",frame['labels'])
 			print("Types:",frame['classes'])
 			print("Fabrics:",frame['buffers'])
@@ -313,19 +323,26 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 
 
 		elif command == "embroider":
-			flags = [f for f in flaglist(line[2]) if f in ["a","p"]]
-			if "a" in flags:
-				writeval(line[1], "buffers", frame, getval(line[1], "buffers", frame, "") + line[3])
-			elif "p" in flags:
-				writeval(line[1], "buffers", frame, line[3] + getval(line[1], "buffers", frame, ""))
+			if len(line) == 4:
+				string = line[3]
 			else:
-				writeval(line[1], "buffers", frame, line[3])
+				string = line[2]
+			if len(line) == 4:
+				flags = [f for f in flaglist(line[2]) if f in ["a","p"]]
+			else:
+				flags = []
+			if "a" in flags:
+				writeval(line[1], "buffers", frame, getval(line[1], "buffers", frame, "",ignore=True) + string)
+			elif "p" in flags:
+				writeval(line[1], "buffers", frame, string + getval(line[1], "buffers", frame, "", ignore=True))
+			else:
+				writeval(line[1], "buffers", frame, string)
 			frame["pointer"] += 1
 
 
 
 		elif command == "gather":
-			frame["buffers"]["materials"] = input("Program Input: ")
+			frame["buffers"]["materials"] = input("Pattern Input: ")
 			frame["pointer"] += 1
 
 
@@ -353,15 +370,15 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 					esc = int(buff)
 				except ValueError:
 					esc = 255
-			writeval(line[1], "buffers", frame, re.sub(r"\x1b\[38;5;[0-9]+m","",getval(line[1], "buffers", frame, "")))
-			writeval(line[1], "buffers", frame, re.sub(r"\x1b\[0m","",getval(line[1], "buffers", frame, "")))
-			writeval(line[1], "buffers", frame, ansify(getval(line[1], "buffers", frame, ""),esc))
+			writeval(line[1], "buffers", frame, re.sub(r"\x1b\[38;5;[0-9]+m","",getval(line[1], "buffers", frame, "", ignore = True)))
+			writeval(line[1], "buffers", frame, re.sub(r"\x1b\[0m","",getval(line[1], "buffers", frame, "", ignore = True)))
+			writeval(line[1], "buffers", frame, ansify(getval(line[1], "buffers", frame, "", ignore = True),esc))
 			frame['pointer'] += 1
 
 
 		elif command == "bleach":
-			writeval(line[1], "buffers", frame, re.sub(r"\x1b\[38;5;[0-9]+m","",getval(line[1], "buffers", frame, "")))
-			writeval(line[1], "buffers", frame, re.sub(r"\x1b\[0m","",getval(line[1], "buffers", frame, "")))
+			writeval(line[1], "buffers", frame, re.sub(r"\x1b\[38;5;[0-9]+m","",getval(line[1], "buffers", frame, "", ignore = True)))
+			writeval(line[1], "buffers", frame, re.sub(r"\x1b\[0m","",getval(line[1], "buffers", frame, "", ignore = True)))
 			frame['pointer'] += 1
 
 
@@ -399,7 +416,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 				elif isinstance(i, list):
 					classadd += i
 				else:
-					getval(i, "classes", frame, i)
+					add = getval(i, "classes", frame, i)
 					classadd += add
 			writeval(line[1], "classes", frame, classadd)
 			frame['pointer'] += 1
@@ -407,12 +424,12 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 
 		elif command == "replace":
 			buffi = line[1]
-			buff = getval(buffi, "buffers", frame, "")
-			flags = flaglist(line[2])
-			fr = line[3]
-			buff = getval(fr, "classes", frame, [])
-			to = line[4]
-			buff = getval(to, "classes", frame, [])
+			buff = getval(buffi, "buffers", frame, "", ignore=True)
+			flags = flaglist(line[2]) if len(line) == 5 else []
+			fr = line[3] if len(line) == 5 else line[2]
+			frclass = getval(fr, "classes", frame, [])
+			to = line[4] if len(line) == 5 else line[3]
+			toclass = getval(to, "classes", frame, [])
 			tempbuff = ""
 			if "g" in flags:
 				times = -1
@@ -445,13 +462,13 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 
 
 
-		elif command == "move":
+		elif command == "copy":
 			fr = line[1]
 			frbuff = getval(fr, "buffers", frame, "")
-			to = line[4]
-			tobuff = getval(to, "buffers", frame, "")
-			flags = flaglist(line[2])
-			regex = line[3]
+			to = line[4] if len(line) == 5 else line[2]
+			tobuff = getval(to, "buffers", frame, "", ignore=True)
+			flags = flaglist(line[2]) if len(line) == 5 else []
+			regex = line[3] if len(line) == 5 else ""
 			if flags == [] and regex == "":
 				writeval(to, "buffers", frame, frbuff)
 				frame['pointer'] += 1
@@ -561,7 +578,6 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 		else:			
 			frame['pointer'] += 1
 
-
 		updateAllDeep(frame)
 	for key, value in prevargs.items():
 		prevargs[key] = frame["buffers"][key]
@@ -570,4 +586,4 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 
 
 
-interpret(tokenised, True, None)
+interpret(tokenised, False, None)

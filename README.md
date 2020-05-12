@@ -78,4 +78,4 @@ sell
 ## Installing
 
 ## Acknowledgments
-Many thanks go out to LyricLy for showing me how to do regular expressions in Python and general help, and to Tripod for general code debugging.
+Many thanks go out to [LyricLy](https://github.com/LyricLy) for showing me how to do regular expressions in Python and general help, and to [tripodsan](https://github.com/tripodsan) for general code debugging.

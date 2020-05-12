@@ -4,7 +4,7 @@ A string-based esoteric programming language.
 ## Table Of Contents
 [Introduction](https://github.com/wompking/tailorlang/blob/master/README.md#introduction)
 
-[Syntax and Terms(https://github.com/wompking/tailorlang/blob/master/README.md#syntax-and-terms)
+[Syntax and Terms](https://github.com/wompking/tailorlang/blob/master/README.md#syntax-and-terms)
 
 [Frames and Procedures](https://github.com/wompking/tailorlang/blob/master/README.md#frames-and-procedures)
 

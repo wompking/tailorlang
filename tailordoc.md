@@ -24,6 +24,13 @@
 | (exit)          | end |
 | (call)          | do <procedure name> (<fabric indexes>) |
 
+| Command         | Format |
+|-----------------|----------------------------------------------|
+| (function)      | procedure <name> (<fabric arguments>) { |
+|                 |    ...content... |
+|                 | } |
+| (call)          | do <procedure name> (<fabric indexes>) |
+
 ###FLAGS###
 
 -p : prepend string instead of overwriting match

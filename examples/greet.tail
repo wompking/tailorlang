@@ -8,3 +8,6 @@ embroider garment "Hello, "
 dye garment 11
 copy username -ag /./ garment
 sell
+embroider garment "\u2756"
+hem garment
+sell

@@ -347,7 +347,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 
 
 		elif command == "hem":
-			writeval(line[1], "buffers", frame, ast.literal_eval('"'+getval(line[1], "buffers", frame, "")+'"'))
+			writeval(line[1], "buffers", frame, ast.literal_eval('"'+getval(line[1], "buffers", frame, "", ignore=True)+'"'))
 			frame["pointer"] += 1
 
 

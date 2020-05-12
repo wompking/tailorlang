@@ -17,8 +17,7 @@ Installing
 Acknowledgments
 
 ## Introduction
-Tailor is a string-based esoteric programming language. As such, it is not recommended to program anything involving numeric calculations in Tailor. It *could
-* be used to program text adventure games, but really, it isn't recommended to program much in Tailor.
+Tailor is a string-based esoteric programming language. As such, it is not recommended to program anything involving numeric calculations in Tailor. It *could* be used to program text adventure games, but really, it isn't recommended to program much in Tailor.
 ## Syntax and Terms
 Tailor introduces some unique syntax for its programs; this is to make the language more esoteric.
 Tailor *fabrics* are the equivalent of variables; they can store one string.

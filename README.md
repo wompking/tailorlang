@@ -2,23 +2,22 @@
 A string-based esoteric programming language.
 
 ## Table Of Contents
-Introduction
+[Introduction](https://github.com/wompking/tailorlang/blob/master/README.md#introduction)
 
-Syntax and Terms
+[Syntax and Terms](https://github.com/wompking/tailorlang/blob/master/README.md#syntax-and-terms)
 
-Frames and Procedures
+[Frames and Procedures](https://github.com/wompking/tailorlang/blob/master/README.md#frames-and-procedures)
 
-Commands
+[Commands](https://github.com/wompking/tailorlang/blob/master/README.md#commands)
 
-Examples
+[Examples](https://github.com/wompking/tailorlang/blob/master/README.md#examples)
 
-Installing
+[Installing](https://github.com/wompking/tailorlang/blob/master/README.md#installing)
 
-Acknowledgments
+[Acknowledgments](https://github.com/wompking/tailorlang/blob/master/README.md#acknowledgments)
 
 ## Introduction
-Tailor is a string-based esoteric programming language. As such, it is not recommended to program anything involving numeric calculations in Tailor. It *could
-* be used to program text adventure games, but really, it isn't recommended to program much in Tailor.
+Tailor is a string-based esoteric programming language. As such, it is not recommended to program anything involving numeric calculations in Tailor. It *could* be used to program text adventure games, but really, it isn't recommended to program much in Tailor. File extensions for Tailor patterns are `.tl` or `.tail`.
 ## Syntax and Terms
 Tailor introduces some unique syntax for its programs; this is to make the language more esoteric.
 Tailor *fabrics* are the equivalent of variables; they can store one string.
@@ -79,4 +78,4 @@ sell
 ## Installing
 
 ## Acknowledgments
-Many thanks go out to LyricLy for showing me how to do regular expressions in Python and general help, and to Tripod for general code debugging.
+Many thanks go out to [LyricLy](https://github.com/LyricLy) for showing me how to do regular expressions in Python and general help, and to [tripodsan](https://github.com/tripodsan) for general code debugging.

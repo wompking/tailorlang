@@ -17,7 +17,7 @@ A string-based esoteric programming language.
 [Acknowledgments](https://github.com/wompking/tailorlang/blob/master/README.md#acknowledgments)
 
 ## Introduction
-Tailor is a string-based esoteric programming language. As such, it is not recommended to program anything involving numeric calculations in Tailor. It *could* be used to program text adventure games, but really, it isn't recommended to program much in Tailor. File extensions for Tailor patterns are `.tl` or `.tail`.
+Tailor is a string-based esoteric programming language. As such, it is not recommended to program anything involving numeric calculations in Tailor. It *could* be used to program text adventure games, but really, it isn't recommended to program much in Tailor. File extensions for Tailor patterns are `.tl` or `.tail`. Tailor is *forgiving*; any errors or unknown commands are handled by skipping over the error like the command that caused the error never existed. Tailor officially recognises the `#` character as its comment; however, because of the forgiving behavior detailed above, as long as a line doesn't start with a Tailor command it can be treated like a comment.
 ## Syntax and Terms
 Tailor introduces some unique syntax for its programs; this is to make the language more esoteric.
 Tailor *fabrics* are the equivalent of variables; they can store one string.

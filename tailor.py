@@ -2,14 +2,15 @@
 
 #An implementation of Tailor in Python.
 #Tailor, and this interpreter, is by cyanidesDuality.
-#Much help was provided by LyricLy.
+#Much help was provided by LyricLy and tripodsan.
+#Note that some commands and terms used to have different names; for example, procedures were functions, conditions were booleans, and fabrics were buffers. Ignore this.
 
 import ast
 import re
 import sys
 
 if len(sys.argv) < 2:
-	print("Usage: tailor <file>")
+	print("Usage: python3 tailor.py <file>")
 	sys.exit(-1)
 
 program = open(sys.argv[1]).read();
@@ -17,38 +18,6 @@ program = open(sys.argv[1]).read();
 
 def ansify(s,esc):
 	return ("\u001b[38;5;" + str(esc) + "m" + s + "\u001b[0m")
-
-# program = """
-# #Program for reversing given fabric
-# procedure shunt (fabric1, fabric2) {
-# 	move fabric1 -p /./ fabric2
-# 	alter fabric1 - /./ ""
-# }
-
-# procedure reverse (fabric){
-# 	condition some = fabric - /./ update
-# 	embroider revfab - ""
-# 	while some {
-# 		do shunt (fabric, revfab)
-# 	}
-# 	move revbuff - // fabric
-# }
-
-# gather
-# copy materials reversing
-# do reverse (reversing)
-# copy reversing garment
-# sell
-# """
-# program = """
-# #Program for signum; breaks with decimals between 0 and 1, and numbers with leading zeroes
-# gather
-# move materials - /./ cut
-# alter cut - /-/ "-1"
-# alter cut - /[2-9]/ "1"
-# move cut - // garment
-# sell
-# """
 
 program_split = program.split("\n")
 program_split = [l.strip() for l in program_split if not(l == "" or l[0] == "#")]
@@ -569,7 +538,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 			for key in params:
 				funcin[args[i]] = frame["buffers"][key]
 				i += 1
-			interpret(code, True, frame, prevargs=funcin)
+			interpret(code, False, frame, prevargs=funcin)
 			i = 0
 			for key in params:
 				frame["buffers"][key] = funcin[args[i]]
@@ -581,9 +550,5 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 		updateAllDeep(frame)
 	for key, value in prevargs.items():
 		prevargs[key] = frame["buffers"][key]
-
-
-
-
 
 interpret(tokenised, False, None)

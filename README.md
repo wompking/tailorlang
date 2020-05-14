@@ -49,7 +49,7 @@ In this table, required arguments are shown in ***bold italic*** and optional ar
 | dye ***fabric color*** |If ***color*** is an integer, this command colors fabric ***fabric*** with the corresponding ANSI color code. Otherwise, the color code used is the value of the fabric ***color.*** In this case, if ***color*** is not a valid fabric or the value of ***color*** is not an integer, the color code used is `255` instead.
 | embroider ***fabric*** **flags** ***string*** | Writes ***string*** to ***fabric.*** Supported flags are `a` and `p`, which respectively append and prepend the string to ***fabric*** instead of overwriting it. In case of `-ap`, `a` always takes precedence.
 | copy ***fabric 1*** **flags regex** ***fabric 2*** | Copies the parts of ***fabric 1*** that match **regex** with **flags** to ***fabric 2.*** The `a` and `p` flags mentioned before can also additionally be set. Note that **flags** and **regex** come as a set; either both **flags** and **regex** are included or neither are.
-| type ***name*** = ***contents*** | Creates a new type with name ***name*** and contents ***contents.*** For example, `type vowels = ["a","e","i","o","u"]` creates a new type named `vowels` with the contents `"a","e","i","o","u"`.
+| type ***name*** = ***contents*** | Creates a new type with name ***name*** and contents ***contents.*** For example, `type vowels = ["a","e","i","o","u"]` creates a new type named `vowels` with the contents `"a","e","i","o","u"`. **ALWAYS** use double quotes.
 | type ***name*** = ***type 1*** + ***type 2*** | Creates a new type with name ***name*** and with contents equal to ***type 1*** prepended to ***type 2.*** Using the previous example, `type vowelY = vowels + ["y"]` creates a new type with the contents `"a","e","i","o","u","y"`, and `type foo = vowels + vowelY` creates a new type with the contents `"a","e","i","o","u","y","a","e","i","o","u"`
 | replace ***fabric*** **flags** ***type 1 type 2*** | Goes through ***fabric*** and replaces all occurrences of an element from ***type 1*** with the corresponding element from ***type 2.*** Supported flags are `a`,`p`, and `g`. `g` is the global flag; without it, only the first occurrence is replaced.
 | alter ***fabric flags regex replace*** | Finds all occurrences of ***regex*** with ***flags*** in ***fabric*** and replaces them with string ***replace.***  If both ***flags*** and ***regex*** are empty, this command acts like `embroider fabric replace`. Supported flags are `a`,`p`, and `g`.
@@ -60,8 +60,8 @@ In this table, required arguments are shown in ***bold italic*** and optional ar
 #### All Caps Procedure
 ```
 procedure caps (capitalising){
-	type lower = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-	type upper = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
+	type lower = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
+	type upper = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 	replace capitalising -g lower upper
 }
 ```

@@ -227,7 +227,6 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 					if tointerpret[frame["pointer"]][0] == "}":
 						counter -= 1
 					frame["pointer"] += 1
-				frame["pointer"] += 1
 
 
 

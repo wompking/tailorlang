@@ -273,7 +273,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 
 		elif command == "condition":
 			try:
-				update = line[6] == "update"
+				update = line[-1] == "update"
 			except IndexError:
 				update = False
 			code = line[3:]

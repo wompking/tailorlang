@@ -79,6 +79,16 @@ def updateBool(name, boollist, bufflist):
 		except KeyError:
 			return False
 		boollist[name]["value"] = not invert
+	elif code[1] == "==":
+		try:
+			buff0 = bufflist[code[0]]
+		except KeyError:
+			return False
+		try:
+			buff1 = bufflist[code[2]]
+		except KeyError:
+			return False
+		boollist[name]["value"] = buff0 == buff1
 	else:
 		try:
 			bool0 = boollist[code[0]]["value"]
@@ -148,8 +158,6 @@ def updateDeep(frame,key):
 	checkframe = frame
 	while checkframe != None:
 		updated = updateBool(key, frame['bools'], checkframe['buffers'])
-		print(checkframe)
-		print(updated)
 		if updated:
 			return
 		checkframe = checkframe['parent']

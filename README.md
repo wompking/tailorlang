@@ -49,6 +49,7 @@ In this table, required arguments are shown in ***bold italic*** and optional ar
 | hem ***name***      | Interprets fabric with name ***name*** as Unicode; for example, `foo\u2756bar` would become `foo❖bar`.
 | condition ***name*** = ***fabric flags regex*** **update** | Checks if ***fabric*** matches ***regex*** with ***flags*** and creates a new condition, ***name,*** with the value of that expression. If update is set, this is updated after each pattern step; otherwise, it is evaluated once and its value is then not changed if the referenced fabric changes. For example, `condition foo = checking - /A/ update` checks whether fabric `checking` has any occurrences of the string `A` in it, and sets condition `foo` accordingly, updating each pattern step.
 | condition ***name*** = not ***condition*** **update** | Should be self-explanatory.
+| condition ***name*** = ***fabric 1*** == ***fabric 2*** **update** | Checks if ***fabric 1*** and ***fabric 2*** are equal.
 | condition ***name*** = ***condition 1*** ***operation*** ***condition 2*** **update** | Should be self-explanatory. Supported operations are `and`, `or`, and `xor`.
 | if ( ***condition*** ){|Checks if ***condition*** is true and executes code block accordingly.
 | while ( ***condition*** ){|Loops while ***condition*** is true.

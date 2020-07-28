@@ -8,55 +8,58 @@
 import ast
 import re
 import sys
+import pathlib
 
 if len(sys.argv) < 2:
 	print("Usage: python3 tailor.py <file>")
 	sys.exit(-1)
+debugging = False
 
 program = open(sys.argv[1]).read();
 
+def tokenisor(prog):
+	program_split = prog.split("\n")
+	program_split = [l.strip() for l in program_split if not(l == "" or l[0] == "#")]
+	tokenised = []
+	sspecial = ["[","(","]",")"]
+	special = sspecial + ["'",'"',"/"]
 
-def ansify(s,esc):
-	return ("\u001b[38;5;" + str(esc) + "m" + s + "\u001b[0m")
-
-program_split = program.split("\n")
-program_split = [l.strip() for l in program_split if not(l == "" or l[0] == "#")]
-tokenised = []
-sspecial = ["[","(","]",")"]
-special = sspecial + ["'",'"',"/"]
-
+	for l in program_split:
+		parsing = l+" "
+		line = []
+		while parsing != "":
+			if parsing[0] in special:
+				if parsing[0] in sspecial:
+					index = sspecial.index(parsing[0])+2
+					char = sspecial[index]
+					find = parsing.index(char)
+					cut = parsing[:find]
+					cut = cut[1:]
+					if parsing[0] == "(":
+						array = cut.split(',')
+						array = [a.strip() for a in array]
+					else:
+						cut = cut[1:-1]
+						array = cut.split('","')
+					parsing = parsing[find+1:]
+					line.append(array)
+				else:
+					space = parsing.index(parsing[0],1)
+					line.append(parsing[:space+1].strip(parsing[0]))
+					parsing = parsing[space+2:]
+			else:
+				space = parsing.index(" ")
+				line.append(parsing[:space])
+				parsing = parsing[space+1:]
+		tokenised.append(line)
+	return tokenised
 
 def flaglist(s):
 	s = s.strip("-")
 	return [i for i in s]
-for l in program_split:
-	parsing = l+" "
-	line = []
-	while parsing != "":
-		if parsing[0] in special:
-			if parsing[0] in sspecial:
-				index = sspecial.index(parsing[0])+2
-				char = sspecial[index]
-				find = parsing.index(char)
-				cut = parsing[:find]
-				cut = cut[1:]
-				if parsing[0] == "(":
-					array = cut.split(',')
-					array = [a.strip() for a in array]
-				else:
-					cut = cut[1:-1]
-					array = cut.split('","')
-				parsing = parsing[find+1:]
-				line.append(array)
-			else:
-				space = parsing.index(parsing[0],1)
-				line.append(parsing[:space+1].strip(parsing[0]))
-				parsing = parsing[space+2:]
-		else:
-			space = parsing.index(" ")
-			line.append(parsing[:space])
-			parsing = parsing[space+1:]
-	tokenised.append(line)
+
+def ansify(s,esc):
+	return ("\u001b[38;5;" + str(esc) + "m" + s + "\u001b[0m")
 
 def updateBool(name, boollist, bufflist):
 	updating = boollist[name]
@@ -235,6 +238,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 					if tointerpret[frame["pointer"]][0] == "}":
 						counter -= 1
 					frame["pointer"] += 1
+				#frame["pointer"] += 1
 
 
 
@@ -551,11 +555,21 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 				frame["buffers"][key] = funcin[args[i]]
 				i += 1
 			frame['pointer'] += 1
+
+		elif command == "variation":
+			impPath = str(pathlib.Path(sys.argv[1]).parent) + "/" + line[-1]
+			imp = open(impPath).read();
+			impFrame = interpret(tokenisor(imp), False, None)
+			impName = pathlib.Path(impPath).stem
+			for a in impFrame["functions"].items():
+				frame["functions"][impName + "." + a[0]] = a[1]
+			frame['pointer'] += 1
 		else:			
 			frame['pointer'] += 1
 
 		updateAllDeep(frame)
 	for key, value in prevargs.items():
 		prevargs[key] = frame["buffers"][key]
+	return frame
 
-interpret(tokenised, False, None)
+interpret(tokenisor(program), False, None)

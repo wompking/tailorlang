@@ -63,6 +63,7 @@ In this table, required arguments are shown in ***bold italic*** and optional ar
 | alter ***fabric flags regex replace*** | Finds all occurrences of ***regex*** with ***flags*** in ***fabric*** and replaces them with string ***replace.***  If both ***flags*** and ***regex*** are empty, this command acts like `embroider fabric replace`. Supported flags are `a`,`p`, and `g`.
 | procedure ***name*** ( ***arguments*** ){ | Creates a new procedure, ***name,*** with ***arguments*** whose code is the code block after this command.
 | do ***name*** ( ***arguments*** ) | Does procedure ***name*** with ***arguments.***
+| variation ***path*** | Imports a file with relative path ***path*** , running it and copying its functions. For example, `variation examples/reversing.tail` would create the functions `reversing.shunt` and `reversing.reverse`, also executing any additional code.
 ## Examples
 
 #### All Caps Procedure

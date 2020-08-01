@@ -98,7 +98,7 @@ def updateBool(name, boollist, bufflist):
 		except KeyError:
 			return False
 		try:
-			bool1 = boollist[code[1]]["value"]
+			bool1 = boollist[code[2]]["value"]
 		except KeyError:
 			return False
 		if code[1] == "or":

@@ -320,9 +320,6 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 			elif "p" in flags and "a" in flags:
 				writeval(line[1], "buffers", frame, string + getval(line[1], "buffers", frame, "", ignore=True) + string)
 			else:
-				build += replaces[idx]
-				char = matchend[idx] - 1
-			else:
 				writeval(line[1], "buffers", frame, string)
 			frame["pointer"] += 1
 

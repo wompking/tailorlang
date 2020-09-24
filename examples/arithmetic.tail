@@ -1,0 +1,214 @@
+
+procedure toUnary (fab){
+	embroider fab -p " "
+	embroider fab -a " "
+
+	type dig = ["0","1","2","3","4","5","6","7","8","9"]
+	type unr = [",","|,","||,","|||,","||||,","|||||,","||||||,","|||||||,","||||||||,","|||||||||,","||||||||||,"]
+	replace fab -g dig unr
+	alter fab -g /, / "∅ "
+
+	condition to_unary = fab - /,/ update
+
+	while to_unary {
+		alter fab -g /\|,/ ",||||||||||"
+		alter fab -g / ,(\|+)/ " \1"
+	}
+
+	alter fab -g /∅/ "0"
+	alter fab -g /-0/ "0"
+	alter fab -g /-\|/ "–|"
+	alter fab -g /^ +/ ""
+	alter fab -g / +$/ ""
+}
+
+procedure fromUnary (fab){
+	
+	alter fab -g /0/ "∅"
+	condition from_unary = fab - /[\|,]/ update
+	alter fab -g /–/ " – "
+	while from_unary {
+		embroider fab -p ","
+		alter fab -g / / " ,"
+		alter fab -g /\|{10}/ "|,"
+		alter fab -g /,([0123456789∅])/ ",0\1"
+		alter fab -g /,\|([0123456789∅])/ ",1\1"
+		alter fab -g /,\|{2}([0123456789∅])/ ",2\1"
+		alter fab -g /,\|{3}([0123456789∅])/ ",3\1"
+		alter fab -g /,\|{4}([0123456789∅])/ ",4\1"
+		alter fab -g /,\|{5}([0123456789∅])/ ",5\1"
+		alter fab -g /,\|{6}([0123456789∅])/ ",6\1"
+		alter fab -g /,\|{7}([0123456789∅])/ ",7\1"
+		alter fab -g /,\|{8}([0123456789∅])/ ",8\1"
+		alter fab -g /,\|{9}([0123456789∅])/ ",9\1"
+		alter fab -g /,/ ""
+	}
+	alter fab -g / – / "-"
+	alter fab -g /([0123456789])∅/ "\1"
+	alter fab -g /∅/ "0"
+}
+
+procedure evaluate (fab){
+	
+	embroider previous - "FIRST"
+
+	condition finished = fab == previous update
+	condition continue = not finished update
+	condition exp = fab - /\^/ update
+	condition mul = fab - /\*/ update
+	condition div = fab - /%/ update
+	condition add = fab - /\+/ update
+	condition sub = fab - /-/ update
+	condition pri = fab - /(pri)|(☈ℌ)/ update
+	condition ack = fab - /ack/ update
+	condition fac = fab - /fac/ update
+	condition lcm = fab - /lcm/ update
+	condition gcd = fab - /gcd/ update
+	condition comparisongang = fab - /(==)|(!=)|(>)|(<)|(>=)|(<=)|(eqz)|(gtz)|(ltz)|(sgn)|(abs)|(swi)/ update
+	condition unaryminus = fab - /;–;/ update
+	condition error = fab - /ERROR/ update
+	while continue {
+
+		copy fab previous
+
+		embroider fab -p " "
+		embroider fab -a " "
+
+		if exp {
+			alter fab -g / (–?\|+0) –(\|+0) \^ / " |0 \1 \2 ^ % "
+			alter fab -g / (–?\|+0) (\|+0) \^ / " \1 \1 \2 |0 - ^ * "
+			alter fab -g / (–?\|+0) 0 \^ / " |0 "
+			alter fab -g / 0 (–?\|+0) \^ / " 0 "
+			alter fab -g / 0 0 \^ / " |0 "
+		}
+		if mul {
+			alter fab -g / –(\|*0) –(\|*0) \* / " \1 \2 * "
+			alter fab -g / (\|*0) –(\|*0) \* / " \1 \2 * ;–; "
+			alter fab -g / –(\|*0) (\|*0) \* / " \1 \2 * ;–; "
+			alter fab -g / (\|*0) (\|+0) \* / " \1 \1 \2 |0 - * + "
+			alter fab -g / (\|*0) 0 \* / " 0 "
+		}
+		if div {
+			alter fab -g / \((.*?) (–\|+0) (\|+0) % (.*?)\) / " \1 0 \4 "
+			alter fab -g / \((.*?) (\|+0) (–\|+0) % (.*?)\) / " \1 0 \4 "
+			alter fab -g / \((.*?) (–\|+0) (–\|+0) % (.*?)\) / " \1 0 \4 "
+			alter fab -g / –(\|+0) –(\|+0) % / " ( \1 \2 % ) "
+			alter fab -g / (\|+0) –(\|+0) % / " ( \1 \2 % ;–; ) "
+			alter fab -g / –(\|+0) (\|+0) % / " ( \1 \2 % ;–; ) "
+			alter fab -g / (\|+0) (\|+0) % / " |0 \1 \2 - \2 % + "
+			alter fab -g / 0 (\|+0) % / " 0 "
+			alter fab -g / (\|+0) 0 % / " [{DIVISION BY ZERO ERROR}] "
+			alter fab -g / 0 0 % / " [{DIVISION BY ZERO ERROR}] "
+		}
+		if add {
+			alter fab -g / –(\|+0) –(\|+0) \+ / " \1 \2 + ;–; "
+			alter fab -g / (\|+0) –(\|+0) \+ / " \1 \2 - "
+			alter fab -g / –(\|+0) (\|+0) \+ / " \2 \1 - "
+			alter fab -g / (\|+)0 (\|+0) \+ / " \1\2 "
+			alter fab -g / 0 (\|+0) \+ / " \1 "
+			alter fab -g / (\|+0) 0 \+ / " \1 "
+			alter fab -g / 0 0 \+ / " 0 "
+		}
+		if sub {
+			alter fab -g / –(\|+0) –(\|+0) - / " \1 \2 - ;–; "
+			alter fab -g / (\|+0) –(\|+0) - / " \1 \2 + "
+			alter fab -g / –(\|+0) (\|+0) - / " \1 \2 + ;–; "
+			alter fab -g / \|(\|*0) \|0 - / " \1 "
+			alter fab -g / 0 (\|+0) - / " –\1 "
+			alter fab -g / (\|+0) 0 - / " \1 "
+			alter fab -g / 0 0 - / " 0 "
+			alter fab -g / \|0 \|0 - / " 0 "
+			alter fab -g / (\|+0) (\|+0) - / " \1 |0 - \2 |0 - - "
+		}
+		
+		if gcd {
+			alter fab -g / –(\|+0) (–?\|+0) gcd / " \1 \2 gcd "
+			alter fab -g / (–?\|+0) –(\|+0) gcd / " \1 \2 gcd "
+			alter fab -g / (\|+0) 0 gcd / " \1 "
+			alter fab -g / (\|+0) 0 gcd / " \1 "
+			alter fab -g / (\|*0) (\|+0) gcd / " \2 \1 \2 mod gcd "
+		}
+		if lcm {
+			alter fab -g / –(\|+0) (–?\|+0) lcm / " \1 \2 lcm "
+			alter fab -g / (–?\|+0) –(\|+0) lcm / " \1 \2 lcm "
+			alter fab -g / 0 0 lcm / " 0 "
+			alter fab -g / (\|*0) (\|*0) lcm / " \2 \1 \1 \2 gcd % *"
+		}
+		alter fab -g / (–?\|*0) (–?\|*0) mod / " \1 \1 \2 % \2 * - "
+
+		if comparisongang {
+			alter fab -g / (\|*0) (\|*0) == / " \1 \2 - eqz "
+			alter fab -g / (\|*0) (\|*0) != / " \1 \2 == eqz "
+			alter fab -g / (\|*0) (\|*0) < / " \2 \1 - gtz "
+			alter fab -g / (\|*0) (\|*0) > / " \1 \2 - gtz "
+			alter fab -g / (\|*0) (\|*0) <= / " \1 \2 < \1 \2 == + gtz "
+			alter fab -g / (\|*0) (\|*0) >= / " \1 \2 > \1 \2 == + gtz "
+
+			alter fab -g / 0 eqz / " |0 "
+			alter fab -g / –?\|+0 eqz / " 0 "
+
+			alter fab -g / 0 gtz / " 0 "
+			alter fab -g / \|+0 gtz / " |0 "
+			alter fab -g / –\|+0 gtz / " 0 "
+
+			alter fab -g / 0 ltz / " 0 "
+			alter fab -g / \|+0 ltz / " 0 "
+			alter fab -g / –\|+0 ltz / " |0 "
+
+			alter fab -g / 0 sgn / " 0 "
+			alter fab -g / \|+0 sgn / " |0 "
+			alter fab -g / –\|+0 sgn / " –|0 "
+
+			alter fab -g / –?(\|*0) abs / " \1 "
+
+			alter fab -g / (\|*0) (\|*0) 0 swi / " \2 "
+			alter fab -g / (\|*0) (\|*0) \|0 swi / " \1 "
+		}
+
+		if ack {
+			alter fab -g / –\|+0 \|+0 ack / "[{RANGE OUT OF BOUNDS ERROR (-x y ack)}]"
+			alter fab -g / \|+0 –\|+0 ack / "[{RANGE OUT OF BOUNDS ERROR (x -y ack)}]"
+			alter fab -g / –\|+0 –\|+0 ack / "[{RANGE OUT OF BOUNDS ERROR (-x -y ack)}]"
+			alter fab -g / (\|+0) (\|+0) ack / " \1 |0 - \1 \2 |0 - ack ack "
+			alter fab -g / (\|+0) 0 ack / " \1 |0 - |0 ack "
+			alter fab -g / 0 (\|+0) ack / " \1 |0 + "
+		}
+
+		if pri {
+			alter fab -g / –(\|*0) pri / " \1 pri "
+			alter fab -g / \|{0,1}0 pri / " 0 "
+			alter fab -g / \|{2}0 pri / " |0 "
+			alter fab -g / (\|{3,}0) pri / " \1 \1 |0 - ☈ℌ eqz "
+			alter fab -g / (\|*0) (\|{3,}0) ☈ℌ / " \1 \2 mod eqz \1 \2 |0 - ☈ℌ + "
+			alter fab -g / (\|*0) (\|{2}0) ☈ℌ / " \1 ||0 mod eqz "
+		}
+
+		if fac {
+			alter fab -g / –\|+0 fac / " [{RANGE OUT OF BOUNDS ERROR (-x fac)}] "
+			alter fab -g / \|{0,1}0 fac / " |0 "
+			alter fab -g / (\|{2,}0) fac / " \1 |0 - fac \1 * "
+		}
+
+		alter fab -g / (\|*0) (\|*0) chs / " \1 fac \2 fac \1 \2 - fac * % "
+
+		if unaryminus {
+			alter fab -g /(\|+0) ;–;/ "–\1"
+			alter fab -g /–(\|+0) ;–;/ "\1"
+			alter fab -g /0 ;–;/ "0"
+		}
+		alter fab -g /\( (\|+0) \)/ " \1 "
+		alter fab -g / +/ " "
+
+		if error {
+			alter fab -g /([^\[\]\{\}])*(\[{.+}\])([^\[\]\{\}])*/ "\2"
+			dye fab 1
+			copy fab garment
+			sell
+			stop
+		}
+		alter fab -g /^ +/ ""
+		alter fab -g / +$/ ""
+
+	}
+
+}

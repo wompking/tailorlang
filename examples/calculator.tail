@@ -1,0 +1,18 @@
+variation arithmetic.tail
+
+gather
+copy materials eval
+copy materials expr
+dye expr 92
+embroider eq " = "
+dye eq 125
+copy eq -ag /./ expr
+
+do arithmetic.toUnary (eval)
+do arithmetic.evaluate (eval)
+do arithmetic.fromUnary (eval)
+
+dye eval 33
+copy eval -ag /./ expr
+copy expr garment
+sell

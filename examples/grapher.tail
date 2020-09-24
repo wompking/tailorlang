@@ -1,0 +1,73 @@
+variation arithmetic.tail
+
+procedure graph (func, xb, yb){
+	do arithmetic.toUnary (func)
+	do arithmetic.toUnary (xb)
+	embroider xb -a " |0 +"
+	do arithmetic.evaluate (xb)
+	do arithmetic.toUnary (yb)
+	embroider yb -a " |0 +"
+	do arithmetic.evaluate (yb)
+
+	embroider xcount "0"
+	embroider ybound "0"
+	embroider calc ""
+
+	condition row = xcount == xb update
+	condition calcrow = not row update
+	condition rendered = yb == ybound update
+	condition calcall = not rendered update
+	condition replace = calc - /[xy]/ update
+
+	while calcall {
+		embroider yb -a " |0 -"
+		do arithmetic.evaluate (yb)
+
+		embroider xcount "0"
+		embroider output -p "-"
+		while calcrow {
+			copy func calc
+			embroider calc -p " "
+			embroider calc -a " ❡"
+			copy xcount -ag /./ calc
+			embroider calc -a "❡"
+			copy yb -ag /./ calc
+
+			while replace {
+				alter calc -g /(.+)x(.+)❡(.+)❡(.+)/ "\1\3\2❡\3❡\4"
+				alter calc -g /(.+)y(.+)❡(.+)❡(.+)/ "\1\4\2❡\3❡\4"
+			}
+			alter calc -g /(.+)❡(.+)❡(.+)/ "\1"
+			do arithmetic.evaluate (calc)
+			do arithmetic.fromUnary (calc)
+
+			embroider char "██"
+			dye char calc
+			copy char -ag /./ output
+
+			embroider xcount -a " |0 +"
+			do arithmetic.evaluate (xcount)	 
+		}
+		copy output garment
+		sell
+		embroider output ""
+	}
+}
+
+embroider garment "Please input an implicit expression to graph."
+dye garment 40
+sell
+gather
+copy materials function
+embroider garment "Please input an upper bound for x, the lower bound being 0."
+dye garment 40
+sell
+gather
+copy materials xin
+embroider garment "Please input an upper bound for y, the lower bound being 0."
+dye garment 40
+sell
+gather
+copy materials yin
+
+do graph (function, xin, yin)

@@ -1,0 +1,165 @@
+gather
+copy materials edit
+condition help = edit - /^help$/ update
+while help {
+	embroider garment "This is a text formatting engine, originally designed for use in messages."
+	dye garment 40
+	sell
+	embroider garment "To use, seperate your tags (which are case-sensitive) from your message with a pipe:"
+	dye garment 40
+	sell
+	embroider garment "    U,e| foobar"
+	dye garment 30
+	sell
+	embroider garment "Tags are evaluated from right to left."
+	dye garment 40
+	sell
+	embroider garment "    'e,U| foobar' => 'e| FOOBAR' => '*** F O O B A R ***'"
+	dye garment 30
+	sell
+	embroider garment "A list of tags currently supported:"
+	dye garment 40
+	sell
+	embroider garment "    s: for sarcasm, makes your message alternating case like in the Spongebob meme."
+	dye garment 30
+	sell
+	embroider garment "    e: for emphasis, spaces your message out with a space between each character, and wrapping it with three asterisks."
+	dye garment 30
+	sell
+	embroider garment "    U and L: for Upper and Lower case, self-explanatory."
+	dye garment 30
+	sell
+	embroider garment "    l: for long, duplicates each character of your message."
+	dye garment 30
+	sell
+	embroider garment "    i: for interlace, takes two messages seperated with <|> and intermingles their characters."
+	dye garment 30
+	sell
+	embroider garment "        For example: 'i| alphabet <|> banana' => 'ablapnhaanbaet'. "
+	dye garment 35
+	sell
+	gather
+	copy materials edit	
+}
+
+
+condition repl = edit - /^[a-zA-Z,]+\| / update
+condition sarc = edit - /,s\| / update
+condition emph = edit - /,e\| / update
+condition uppe = edit - /,U\| / update
+condition lowe = edit - /,L\| / update
+condition long = edit - /,l\| / update
+condition inte = edit - /,i\| / update
+
+condition end_inte = edit - /( ❡ )$/ update
+condition start_inte = edit - /(.{2}❧ )+ ❡ (.❦+)/ update
+condition both_inte = end_inte or start_inte update
+condition cont_inte = not both_inte update
+type lower = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
+type upper = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+if repl {
+	embroider edit -p ","
+}
+while repl {
+	if emph {
+		alter edit - /^(.*),e\| / "\1| "
+		copy edit -g /^(.*)\| / escapes
+		alter edit -g /^(.*)\| / ""
+
+		alter edit -g /(.)/ "\1 "
+		embroider edit -a "***"
+		embroider edit -p "*** "
+
+		embroider edit -p "| "
+		copy escapes -pg /./ edit
+	}
+	if uppe {
+		alter edit - /^(.*),U\| / "\1| "
+		copy edit -g /^(.*)\| / escapes
+		alter edit -g /^(.*)\| / ""
+
+		replace edit -g lower upper
+
+		embroider edit -p "| "
+		copy escapes -pg /./ edit
+	}
+	if lowe {
+		alter edit - /^(.*),L\| / "\1| "
+		copy edit -g /^(.*)\| / escapes
+		alter edit -g /^(.*)\| / ""
+
+		replace edit -g upper lower
+
+		embroider edit -p "| "
+		copy escapes -pg /./ edit
+	}
+	if inte {
+		alter edit - /^(.*),i\| / "\1| "
+		copy edit -g /^(.*)\| / escapes
+		alter edit -g /^(.*)\| / ""
+
+		alter edit -g / <\|> / " ❡ "
+		alter edit -g /(.)/ "\1❦"
+		alter edit -g / ❦❡❦ ❦/ " ❡ "
+		while cont_inte {
+			alter edit - /(.)❦(.*) ❡ (.)❦(.*)/ "\1\3❧ \2 ❡ \4"
+		}
+		alter edit -g /❧ / ""
+		alter edit -g /❦/ ""
+		alter edit -g / ❡ / ""
+
+		embroider edit -p "| "
+		copy escapes -pg /./ edit
+	}
+	if sarc {
+		alter edit - /^(.*),s\| / "\1| "
+		copy edit -g /^(.*)\| / escapes
+		alter edit -g /^(.*)\| / ""
+
+		replace edit -g upper lower
+		alter edit -g /(.{2})/ "\1❡"
+		alter edit -g /a❡/ "A"
+		alter edit -g /b❡/ "B"
+		alter edit -g /c❡/ "C"
+		alter edit -g /d❡/ "D"
+		alter edit -g /e❡/ "E"
+		alter edit -g /f❡/ "F"
+		alter edit -g /g❡/ "G"
+		alter edit -g /h❡/ "H"
+		alter edit -g /i❡/ "I"
+		alter edit -g /j❡/ "J"
+		alter edit -g /k❡/ "K"
+		alter edit -g /l❡/ "L"
+		alter edit -g /m❡/ "M"
+		alter edit -g /n❡/ "N"
+		alter edit -g /o❡/ "O"
+		alter edit -g /p❡/ "P"
+		alter edit -g /q❡/ "Q"
+		alter edit -g /r❡/ "R"
+		alter edit -g /s❡/ "S"
+		alter edit -g /t❡/ "T"
+		alter edit -g /u❡/ "U"
+		alter edit -g /v❡/ "V"
+		alter edit -g /w❡/ "W"
+		alter edit -g /x❡/ "X"
+		alter edit -g /y❡/ "Y"
+		alter edit -g /z❡/ "Z"
+		alter edit -g /❡/ ""
+
+		embroider edit -p "| "
+		copy escapes -pg /./ edit
+	}
+	if long {
+		alter edit - /^(.*),l\| / "\1| "
+		copy edit -g /^(.*)\| / escapes
+		alter edit -g /^(.*)\| / ""
+
+		alter edit -g /(.)/ "\1\1"
+
+		embroider edit -p "| "
+		copy escapes -pg /./ edit
+	}
+}
+alter edit - /\| / ""
+copy edit garment
+sell

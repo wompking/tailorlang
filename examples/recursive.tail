@@ -1,0 +1,14 @@
+gather
+copy materials str
+gather
+copy materials iters
+embroider append "<"
+copy append -a /./ iters
+condition some = iters - /\|/ update
+while some {
+	alter iters -g /\|</ "<"
+	alter str -g /EINE/ "EINE Is Not Emacs"
+	alter str -g /ZWEI/ "ZWEI Was EINE Initially"
+}
+copy str garment
+sell

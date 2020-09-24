@@ -1,0 +1,19 @@
+procedure shunt (fabric1, fabric2) {
+    copy fabric1 -p /./ fabric2
+    alter fabric1 - /./ ""
+}
+
+procedure reverse (fabric) {
+    condition some = fabric - /./ update
+    embroider revfabric ""
+    while some {
+        do shunt (fabric, revfabric)
+    }
+    copy revfabric - // fabric
+}
+
+gather
+copy materials fabric
+do reverse (fabric)
+copy fabric garment
+sell

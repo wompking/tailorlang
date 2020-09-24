@@ -14,6 +14,8 @@ if len(sys.argv) < 2:
 	print("Usage: python3 tailor.py <file>")
 	sys.exit(-1)
 debugging = False
+if len(sys.argv) > 2:
+	debugging = bool(sys.argv[2])
 
 program = open(sys.argv[1]).read();
 
@@ -311,10 +313,15 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 				flags = [f for f in flaglist(line[2]) if f in ["a","p"]]
 			else:
 				flags = []
-			if "a" in flags:
+			if "a" in flags and "p" not in flags:
 				writeval(line[1], "buffers", frame, getval(line[1], "buffers", frame, "",ignore=True) + string)
-			elif "p" in flags:
+			elif "p" in flags and "a" not in flags:
 				writeval(line[1], "buffers", frame, string + getval(line[1], "buffers", frame, "", ignore=True))
+			elif "p" in flags and "a" in flags:
+				writeval(line[1], "buffers", frame, string + getval(line[1], "buffers", frame, "", ignore=True) + string)
+			else:
+				build += replaces[idx]
+				char = matchend[idx] - 1
 			else:
 				writeval(line[1], "buffers", frame, string)
 			frame["pointer"] += 1
@@ -427,10 +434,12 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 						replace = toclass[idx]
 					except IndexError:
 						replace = ""
-					if "a" in flags:
+					if "a" in flags and "p" not in flags:
 						add = char + replace
-					elif "p" in flags:
+					elif "p" in flags and "a" not in flags:
 						add = replace + char
+					elif "p" in flags and "a" in flags:
+						add = char + replace + char
 					else:
 						add = replace
 					times -= 1
@@ -472,10 +481,12 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 						add = matches[0]
 					except IndexError:
 						add = ""
-				if "a" in flags:
+				if "a" in flags and "p" not in flags:
 					writeval(to, "buffers", frame, tobuff+add)
-				elif "p" in flags:
+				elif "p" in flags and "a" not in flags:
 					writeval(to, "buffers", frame, add+tobuff)
+				elif "p" in flags and "a" in flags:
+					writeval(to, "buffers", frame, add+tobuff+add)
 				else:
 					writeval(to, "buffers", frame, add)
 				frame['pointer'] += 1
@@ -520,13 +531,18 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 					if char in matchstart:
 						idx = matchstart.index(char)
 						if tries != 0:
-							if "a" in flags:
+							if "a" in flags and "p" not in flags:
 								build += matches[idx]
 								build += replaces[idx]
 								char = matchend[idx] - 1
-							elif "p" in flags:
+							elif "p" in flags and "a" not in flags:
 								build += replaces[idx]
 								build += matches[idx]
+								char = matchend[idx] - 1
+							elif "p" in flags and "a" in flags:
+								build += replaces[idx]
+								build += matches[idx]
+								build += replaces[idx]
 								char = matchend[idx] - 1
 							else:
 								build += replaces[idx]
@@ -549,7 +565,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 			for key in params:
 				funcin[args[i]] = frame["buffers"][key]
 				i += 1
-			interpret(code, False, frame, prevargs=funcin)
+			interpret(code, debugging, frame, prevargs=funcin)
 			i = 0
 			for key in params:
 				frame["buffers"][key] = funcin[args[i]]
@@ -572,4 +588,4 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 		prevargs[key] = frame["buffers"][key]
 	return frame
 
-interpret(tokenisor(program), False, None)
+interpret(tokenisor(program), debugging, None)

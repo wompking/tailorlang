@@ -67,8 +67,7 @@ while repl {
 		alter edit -g /^(.*)\| / ""
 
 		alter edit -g /(.)/ "\1 "
-		embroider edit -a "***"
-		embroider edit -p "*** "
+		embroider edit -ap "***"
 
 		embroider edit -p "| "
 		copy escapes -pg /./ edit

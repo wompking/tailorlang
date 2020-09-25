@@ -137,12 +137,12 @@ procedure evaluate (fab){
 		alter fab -g / (–?\|*0) (–?\|*0) mod / " \1 \1 \2 % \2 * - "
 
 		if comparisongang {
-			alter fab -g / (\|*0) (\|*0) == / " \1 \2 - eqz "
-			alter fab -g / (\|*0) (\|*0) != / " \1 \2 == eqz "
-			alter fab -g / (\|*0) (\|*0) < / " \2 \1 - gtz "
-			alter fab -g / (\|*0) (\|*0) > / " \1 \2 - gtz "
-			alter fab -g / (\|*0) (\|*0) <= / " \1 \2 < \1 \2 == + gtz "
-			alter fab -g / (\|*0) (\|*0) >= / " \1 \2 > \1 \2 == + gtz "
+			alter fab -g / (–?\|*0) (–?\|*0) == / " \1 \2 - eqz "
+			alter fab -g / (–?\|*0) (–?\|*0) != / " \1 \2 == eqz "
+			alter fab -g / (–?\|*0) (–?\|*0) < / " \2 \1 - gtz "
+			alter fab -g / (–?\|*0) (–?\|*0) > / " \1 \2 - gtz "
+			alter fab -g / (–?\|*0) (–?\|*0) <= / " \1 \2 < \1 \2 == + gtz "
+			alter fab -g / (–?\|*0) (–?\|*0) >= / " \1 \2 > \1 \2 == + gtz "
 
 			alter fab -g / 0 eqz / " |0 "
 			alter fab -g / –?\|+0 eqz / " 0 "
@@ -161,8 +161,8 @@ procedure evaluate (fab){
 
 			alter fab -g / –?(\|*0) abs / " \1 "
 
-			alter fab -g / (\|*0) (\|*0) 0 swi / " \2 "
-			alter fab -g / (\|*0) (\|*0) \|0 swi / " \1 "
+			alter fab -g / (–?\|*0) (–?\|*0) 0 swi / " \2 "
+			alter fab -g / (–?\|*0) (–?\|*0) \|0 swi / " \1 "
 		}
 
 		if ack {

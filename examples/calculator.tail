@@ -1,18 +1,28 @@
 variation arithmetic.tail
 
-gather
-copy materials eval
-copy materials expr
-dye expr 92
-embroider eq " = "
-dye eq 125
-copy eq -ag /./ expr
+embroider test "FIRST"
+condition end = test - /^exit$/ update
+condition loop = not end update
+while loop {
+	gather
+	copy materials test
+	condition end = test - /^exit$/ update
+	if end {
+		stop
+	}
+	copy test eval
+	copy test expr
+	dye expr 92
+	embroider eq " = "
+	dye eq 125
+	copy eq -ag /./ expr
 
-do arithmetic.toUnary (eval)
-do arithmetic.evaluate (eval)
-do arithmetic.fromUnary (eval)
+	do arithmetic.toUnary (eval)
+	do arithmetic.evaluate (eval)
+	do arithmetic.fromUnary (eval)
 
-dye eval 33
-copy eval -ag /./ expr
-copy expr garment
-sell
+	dye eval 33
+	copy eval -ag /./ expr
+	copy expr garment
+	sell
+}

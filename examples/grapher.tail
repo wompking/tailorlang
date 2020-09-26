@@ -40,6 +40,7 @@ procedure graph (func, xb, yb){
 			alter calc -g /(.+)❡(.+)❡(.+)/ "\1"
 			do arithmetic.evaluate (calc)
 			do arithmetic.fromUnary (calc)
+			do arithmetic.cutAssign (calc)
 
 			embroider char "██"
 			dye char calc

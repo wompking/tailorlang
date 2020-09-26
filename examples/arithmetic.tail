@@ -1,5 +1,9 @@
-#TailorCalc; accepts only integers.
+#TailorCalc Arithmetic Library
+
 procedure toUnary (fab){
+
+	#Converts a decimal string to unary, accepting only integers.
+
 	embroider fab -p " "
 	embroider fab -a " "
 
@@ -22,8 +26,17 @@ procedure toUnary (fab){
 	alter fab -g / +$/ ""
 }
 
+procedure cutAssign (fab){
+
+	#Cuts the assignment statements out of an evaluated string.
+
+	alter fab -g /.+ ; (.+)/ "\1"
+}
+
 procedure fromUnary (fab){
-	
+
+	#Converts a unary string to decimal.
+
 	alter fab -g /0/ "∅"
 	condition from_unary = fab - /[\|,]/ update
 	alter fab -g /–/ " – "
@@ -46,26 +59,37 @@ procedure fromUnary (fab){
 	alter fab -g / – / "-"
 	alter fab -g /([0123456789])∅/ "\1"
 	alter fab -g /∅/ "0"
+	alter fab -g /(0+)([0-9+])/ "\2"
 }
 
 procedure evaluate (fab){
+
+	#Evaluates a unary string.
+	#Commands that would produce non-integer values are mapped to integers with floor().
+
+	#Takes in RPN.
+	#Variable assignments should be at the very start of your calculation string, and are of the form:
+	#<variable name> := ( <value> ) ; <variable name 2> := ( <value 2> ) ;...
+	#Variable names consist of uppercase and lowercase Latin and Greek letters.
+	#The commands can be found below ↴ .
 	
 	embroider previous - "FIRST"
 
 	condition finished = fab == previous update
 	condition continue = not finished update
-	condition exp = fab - /\^/ update
-	condition mul = fab - /\*/ update
-	condition div = fab - /%/ update
-	condition add = fab - /\+/ update
-	condition sub = fab - /-/ update
-	condition pri = fab - /(pri)|(☈ℌ)/ update
-	condition ack = fab - /ack/ update
-	condition fac = fab - /fac/ update
-	condition lcm = fab - /lcm/ update
-	condition gcd = fab - /gcd/ update
-	condition comparisongang = fab - /(==)|(!=)|(>)|(<)|(>=)|(<=)|(eqz)|(gtz)|(ltz)|(sgn)|(abs)|(swi)/ update
-	condition unaryminus = fab - /;–;/ update
+		condition exp = fab - /\^/ update
+		condition mul = fab - /\*/ update
+		condition div = fab - /%/ update
+		condition add = fab - /\+/ update
+		condition sub = fab - /-/ update
+		condition pri = fab - /(pri)|(☈ℌ)/ update
+		condition ack = fab - /ack/ update
+		condition fac = fab - /fac/ update
+		condition lcm = fab - /lcm/ update
+		condition gcd = fab - /gcd/ update
+		condition asg = fab - /:=/ update
+		condition comparisongang = fab - /(==)|(!=)|(>)|(<)|(>=)|(<=)|(eqz)|(gtz)|(ltz)|(sgn)|(abs)|(swi)/ update
+		condition unaryminus = fab - /;–;/ update
 	condition error = fab - /ERROR/ update
 	while continue {
 
@@ -73,7 +97,9 @@ procedure evaluate (fab){
 
 		embroider fab -p " "
 		embroider fab -a " "
-
+		if asg {
+			alter fab -g / (?P<V>[a-zA-zα-ωΑ-Ω]+) := (–?\|*0)(.*?) (?P=V) (.*) / " \1 := \2\3 \2 \4 "
+		}
 		if exp {
 			alter fab -g / (–?\|+0) –(\|+0) \^ / " |0 \1 \2 ^ % "
 			alter fab -g / (–?\|+0) (\|+0) \^ / " \1 \1 \2 |0 - ^ * "

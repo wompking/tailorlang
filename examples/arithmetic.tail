@@ -113,12 +113,12 @@ procedure evaluate (fab){
 			alter fab -g / –(\|+0) –(\|+0) - / " \1 \2 - ;–; "
 			alter fab -g / (\|+0) –(\|+0) - / " \1 \2 + "
 			alter fab -g / –(\|+0) (\|+0) - / " \1 \2 + ;–; "
-			alter fab -g / \|(\|*0) \|0 - / " \1 "
+
 			alter fab -g / 0 (\|+0) - / " –\1 "
 			alter fab -g / (\|+0) 0 - / " \1 "
 			alter fab -g / 0 0 - / " 0 "
-			alter fab -g / \|0 \|0 - / " 0 "
-			alter fab -g / (\|+0) (\|+0) - / " \1 |0 - \2 |0 - - "
+
+			alter fab -g / (?P<V>\|*)(\|*?)0 (?P=V)(\|*?)0 - / " \2 𐭹 0 \3 𐭹 0 - "
 		}
 		
 		if gcd {
@@ -196,6 +196,7 @@ procedure evaluate (fab){
 			alter fab -g /–(\|+0) ;–;/ "\1"
 			alter fab -g /0 ;–;/ "0"
 		}
+		alter fab -g / 𐭹 / ""
 		alter fab -g /\( (\|+0) \)/ " \1 "
 		alter fab -g / +/ " "
 

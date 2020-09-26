@@ -1,4 +1,4 @@
-
+#TailorCalc; accepts only integers.
 procedure toUnary (fab){
 	embroider fab -p " "
 	embroider fab -a " "
@@ -85,7 +85,9 @@ procedure evaluate (fab){
 			alter fab -g / –(\|*0) –(\|*0) \* / " \1 \2 * "
 			alter fab -g / (\|*0) –(\|*0) \* / " \1 \2 * ;–; "
 			alter fab -g / –(\|*0) (\|*0) \* / " \1 \2 * ;–; "
-			alter fab -g / (\|*0) (\|+0) \* / " \1 \1 \2 |0 - * + "
+			alter fab -g / (\|*0) (\|*0) \* / " 𐒂\1 \2 * "
+			alter fab -g / (\|*)𐒂\|(\|*)(0) (\|+)0 \* / " \1\4𐒂\2\3 \4\3 * "
+			alter fab -g / (\|*)𐒂(0) (\|+)0 \* / " \1\2 "
 			alter fab -g / (\|*0) 0 \* / " 0 "
 		}
 		if div {

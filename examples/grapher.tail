@@ -27,17 +27,18 @@ procedure graph (func, xb, yb){
 		embroider output -p "-"
 		while calcrow {
 			copy func calc
-			embroider calc -p " "
-			embroider calc -a " ❡"
-			copy xcount -ag /./ calc
-			embroider calc -a "❡"
-			copy yb -ag /./ calc
+			#embroider calc -p " "
+			#embroider calc -a " ❡"
+			#copy xcount -ag /./ calc
+			#embroider calc -a "❡"
+			#copy yb -ag /./ calc
 
-			while replace {
-				alter calc -g /(.+)x(.+)❡(.+)❡(.+)/ "\1\3\2❡\3❡\4"
-				alter calc -g /(.+)y(.+)❡(.+)❡(.+)/ "\1\4\2❡\3❡\4"
-			}
-			alter calc -g /(.+)❡(.+)❡(.+)/ "\1"
+			embroider calc -p " ) ; "
+			copy yb -pg /./ calc
+			embroider calc -p " ) ; y := ( "
+			copy xcount -pg /./ calc
+			embroider calc -p " x := ( "
+
 			do arithmetic.evaluate (calc)
 			do arithmetic.fromUnary (calc)
 			do arithmetic.cutAssign (calc)

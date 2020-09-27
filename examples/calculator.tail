@@ -3,26 +3,65 @@ variation arithmetic.tail
 embroider test "FIRST"
 condition end = test - /^exit$/ update
 condition loop = not end update
+condition variables = test - /^vars$/ update
+condition clear = test - /^clearvars$/ update
+
+condition any = test - /^(vars)|(exit)|(clearvars)$/ update
+condition not = not any update
+embroider begin ""
 while loop {
 	gather
 	copy materials test
 	condition end = test - /^exit$/ update
+	condition variables = test - /^vars$/ update
+	condition clear = test - /^clearvars$/ update
+	condition any = test - /^(vars)|(exit)|(clearvars)$/ update
+	condition not = not any update
 	if end {
 		stop
 	}
-	copy test eval
-	copy test expr
-	dye expr 92
-	embroider eq " = "
-	dye eq 125
-	copy eq -ag /./ expr
+	do arithmetic.formatAssign (begin)
+	if variables {
+		copy begin color
+		dye color 206
+		copy color garment
+		sell
+	}
+	if clear {
+		embroider begin ""
+		embroider out "Done."
+		dye out 208
+		copy out garment
+		sell
+	}
+	if not {
+		copy test eval
+		copy test expr
+		dye expr 92
+		embroider eq " = "
+		dye eq 125
+		copy eq -ag /./ expr
 
-	do arithmetic.toUnary (eval)
-	do arithmetic.evaluate (eval)
-	do arithmetic.fromUnary (eval)
+		copy begin -pg /./ eval
 
-	dye eval 33
-	copy eval -ag /./ expr
-	copy expr garment
-	sell
+		do arithmetic.toUnary (eval)
+		do arithmetic.evaluate (eval)
+		do arithmetic.fromUnary (eval)
+
+		copy eval getVars
+
+		do arithmetic.cutAssign (eval)
+		do arithmetic.getAssign (getVars)
+		alter eval -g / ; $/ ""
+
+		copy getVars -ag /./ begin
+		embroider begin -a " ; "
+		alter begin -g /  ;$/ " "
+		alter begin -g / ;  ; / " ; "
+
+		dye eval 33
+		copy eval -ag /./ expr
+		copy expr garment
+		sell
+	}
 }

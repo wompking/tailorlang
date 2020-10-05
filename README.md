@@ -2,19 +2,12 @@
 A string-based esoteric programming language.
 
 ## Table Of Contents
-[Introduction](#introduction)
-
-[Syntax and Terms](#syntax-and-terms)
-
-[Frames and Procedures](#frames-and-procedures)
-
-[Commands](#commands)
-
-[Examples](#examples)
-
-[Installing](#installing)
-
-[Acknowledgments](#acknowledgments)
+* [Introduction](#introduction)
+* [Syntax and Terms](#syntax-and-terms)
+* [Frames and Procedures](#frames-and-procedures)
+* [Commands](#commands)
+* [Installing](#installing)
+* [Acknowledgments](#acknowledgments)
 
 ## Introduction
 Tailor is a string-based esoteric programming language. As such, it is not recommended to program anything involving numeric calculations in Tailor. It *could* be used to program text adventure games, but really, it isn't recommended to program much in Tailor. File extensions for Tailor patterns are `.tl` or `.tail`. Tailor is *forgiving*; any errors or unknown commands are handled by skipping over the error like the command that caused the error never existed. Tailor officially recognises the `#` character as its comment; however, because of the forgiving behavior detailed above, as long as a line doesn't start with a Tailor command it can be treated like a comment.
@@ -64,25 +57,6 @@ In this table, required arguments are shown in ***bold italic*** and optional ar
 | procedure ***name*** ( ***arguments*** ){ | Creates a new procedure, ***name,*** with ***arguments*** whose code is the code block after this command.
 | do ***name*** ( ***arguments*** ) | Does procedure ***name*** with ***arguments.***
 | variation ***path*** | Imports a file with relative path ***path*** , running it and copying its functions. For example, `variation examples/reversing.tail` would create the functions `reversing.shunt` and `reversing.reverse`, also executing any additional code.
-## Examples
-
-#### All Caps Procedure
-```
-procedure caps (capitalising){
-	type lower = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
-	type upper = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
-	replace capitalising -g lower upper
-}
-```
-##### How to use in a pattern:
-
-```
-gather
-copy materials alter
-do caps (alter)
-copy alter garment
-sell
-```
 
 ## Installing
 

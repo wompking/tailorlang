@@ -1,0 +1,436 @@
+#Tailor Mathematics Library
+
+procedure toUnary (fab){
+
+	#Converts a decimal string to unary, accepting only integers.
+
+	embroider fab -p " "
+	embroider fab -a " "
+
+	type dig = ["0","1","2","3","4","5","6","7","8","9"]
+	type unr = [",","|,","||,","|||,","||||,","|||||,","||||||,","|||||||,","||||||||,","|||||||||,","||||||||||,"]
+	replace fab -g dig unr
+	alter fab -g /, / "∅ "
+
+	condition to_unary = fab - /,/ update
+
+	while to_unary {
+		alter fab -g /\|,/ ",||||||||||"
+		alter fab -g / ,(\|+)/ " \1"
+	}
+
+	alter fab -g /∅/ "0"
+	alter fab -g /-0/ "0"
+	alter fab -g /-\|/ "–|"
+	alter fab -g /^ +/ ""
+	alter fab -g / +$/ ""
+}
+
+procedure toUnaryHex (fab){
+
+	#Converts a hexadecimal string to unary, accepting only integers.
+
+	embroider fab -p " "
+	embroider fab -a " "
+
+	type dig = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"]
+	type unr = [",","|,","||,","|||,","||||,","|||||,","||||||,","|||||||,","||||||||,","|||||||||,","||||||||||,","|||||||||||,","||||||||||||,","|||||||||||||,","||||||||||||||,","|||||||||||||||,"]
+	replace fab -g dig unr
+	alter fab -g /, / "∅ "
+
+	condition to_unary = fab - /,/ update
+
+	while to_unary {
+		alter fab -g /\|,/ ",|||||||||||||||"
+		alter fab -g / ,(\|+)/ " \1"
+	}
+
+	alter fab -g /∅/ "0"
+	alter fab -g /-0/ "0"
+	alter fab -g /-\|/ "–|"
+	alter fab -g /^ +/ ""
+	alter fab -g / +$/ ""
+}
+
+procedure cutAssign (fab){
+
+	#Cuts the assignment statements out of an evaluated string.
+
+	alter fab -g / ; ([a-zA-zα-ωΑ-Ω_]+ := ((–?\d+)|([a-zA-zα-ωΑ-Ω_]+=>{.+})))/ " ; \1 ; "
+	alter fab -g /.* ; (.+)/ "\1"
+}
+
+procedure getAssign (fab){
+
+	#Gets assignment statements from an evaluated string.
+
+	alter fab -g / ; ([a-zA-zα-ωΑ-Ω_]+ := ((–?\d+)|([a-zA-zα-ωΑ-Ω_]+=>{.+})))/ " ; \1 ; "
+	alter fab -g /(.+) ; .*/ "\1"
+}
+
+procedure formatAssign (fab){
+
+	#Formats assignment statements nicely.
+
+	alter fab -g /^ +/ ""
+	alter fab -g / +$/ " "
+	alter fab -g /( ; )+/ " ; "
+	alter fab -g /(; )+/ "; "
+	alter fab -g /(?P<V>[a-zA-zα-ωΑ-Ω_]+) := ((–?\d+)|([a-zA-zα-ωΑ-Ω_]+=>{.+}))(.*?) (?P=V) := ((–?\d+)|([a-zA-zα-ωΑ-Ω_]+=>{.+}))/ " \1 := \4 \3 "
+	alter fab -g /(?P<V>[a-zA-zα-ωΑ-Ω_]+ := ((–?\d+)|([a-zA-zα-ωΑ-Ω_]+=>{.+})) ; )(.*?)(?P=V)/ "\1\2"
+	alter fab -g / ; [^a-zA-zα-ωΑ-Ω_]+ := ((–?\d+)|([a-zA-zα-ωΑ-Ω_]+=>{.+})) ; / " ; "
+	alter fab -g /^ +/ ""
+	alter fab -g / +$/ " "
+	alter fab -g /( ; )+/ " ; "
+	alter fab -g /(; )+/ "; "
+
+}
+
+
+procedure fromUnary (fab){
+
+	#Converts a unary string to decimal.
+
+	alter fab -g /0/ "∅"
+	condition from_unary = fab - /[\|,]/ update
+	alter fab -g /–/ " – "
+	while from_unary {
+		embroider fab -p ","
+		alter fab -g / / " ,"
+		alter fab -g /\|{10}/ "|,"
+		alter fab -g /,([0123456789∅])/ ",0\1"
+		alter fab -g /,\|([0123456789∅])/ ",1\1"
+		alter fab -g /,\|{2}([0123456789∅])/ ",2\1"
+		alter fab -g /,\|{3}([0123456789∅])/ ",3\1"
+		alter fab -g /,\|{4}([0123456789∅])/ ",4\1"
+		alter fab -g /,\|{5}([0123456789∅])/ ",5\1"
+		alter fab -g /,\|{6}([0123456789∅])/ ",6\1"
+		alter fab -g /,\|{7}([0123456789∅])/ ",7\1"
+		alter fab -g /,\|{8}([0123456789∅])/ ",8\1"
+		alter fab -g /,\|{9}([0123456789∅])/ ",9\1"
+		alter fab -g /,/ ""
+	}
+	alter fab -g / – / "-"
+	alter fab -g /([0123456789])∅/ "\1"
+	alter fab -g /∅/ "0"
+	alter fab -g / (0+)([0-9]+)/ " \2"
+}
+
+procedure fromUnaryHex (fab){
+
+	#Converts a unary string to hexadecimal.
+
+	alter fab -g /0/ "∅"
+	condition from_unary = fab - /[\|,]/ update
+	alter fab -g /–/ " – "
+	while from_unary {
+		embroider fab -p ","
+		alter fab -g / / " ,"
+		alter fab -g /\|{16}/ "|,"
+		alter fab -g /,([0123456789abcdef∅])/ ",0\1"
+		alter fab -g /,\|([0123456789abcdef∅])/ ",1\1"
+		alter fab -g /,\|{2}([0123456789abcdef∅])/ ",2\1"
+		alter fab -g /,\|{3}([0123456789abcdef∅])/ ",3\1"
+		alter fab -g /,\|{4}([0123456789abcdef∅])/ ",4\1"
+		alter fab -g /,\|{5}([0123456789abcdef∅])/ ",5\1"
+		alter fab -g /,\|{6}([0123456789abcdef∅])/ ",6\1"
+		alter fab -g /,\|{7}([0123456789abcdef∅])/ ",7\1"
+		alter fab -g /,\|{8}([0123456789abcdef∅])/ ",8\1"
+		alter fab -g /,\|{9}([0123456789abcdef∅])/ ",9\1"
+		alter fab -g /,\|{10}([0123456789abcdef∅])/ ",a\1"
+		alter fab -g /,\|{11}([0123456789abcdef∅])/ ",b\1"
+		alter fab -g /,\|{12}([0123456789abcdef∅])/ ",c\1"
+		alter fab -g /,\|{13}([0123456789abcdef∅])/ ",d\1"
+		alter fab -g /,\|{14}([0123456789abcdef∅])/ ",e\1"
+		alter fab -g /,\|{15}([0123456789abcdef∅])/ ",f\1"
+		alter fab -g /,/ ""
+	}
+	alter fab -g / – / "-"
+	alter fab -g /([0123456789abcdef])∅/ "\1"
+	alter fab -g /∅/ "0"
+	alter fab -g / (0+)([0-9a-f]+)/ " \2"
+}
+
+procedure evaluate (fab){
+
+	#Evaluates a unary string.
+	#Commands that would produce non-integer values are mapped to integers with floor().
+
+	#Takes in RPN.
+	#Variable assignments should be at the very start of your calculation string, and are of the form:
+		#<variable name> := ( <value> ) ; <variable name 2> := ( <value 2> ) ;...
+	#Variable assignments can be recursive, so
+		#input := ( 1 ) ; input := ( 1 + )
+	#works.
+	#Variable names consist of uppercase and lowercase Latin and Greek letters, and underscores.
+	#Functions have the syntax:
+		<param≥>{expr}
+	#and only take *one* parameter (same format as variable names), but they can be curried. Also, they might be able to be called recursively but i'm not sure if swi short-circuits properly.
+	#The commands can be found below ↴ .
+	
+	embroider previous1 - "FIRST"
+
+	condition finished1 = fab == previous1 update
+	condition asg = fab - /:=/ update
+	condition continue1 = not finished1 update
+
+	while continue1 {
+		copy fab previous1
+
+		embroider fab -p " "
+		embroider fab -a " "
+
+		embroider previous2 - "FIRST"
+
+		condition finished2 = fab == previous2 update
+		condition asg = fab - /:=/ update
+		condition continue2 = not finished2 update
+			condition exp = fab - /\^/ update
+			condition mul = fab - /\*/ update
+			condition div = fab - /÷/ update
+			condition add = fab - /\+/ update
+			condition sub = fab - /-/ update
+			condition pri = fab - /(pri)|(div)|(☈ℌ)/ update
+			condition ack = fab - /ack/ update
+			condition fac = fab - /fac/ update
+			condition lcm = fab - /lcm/ update
+			condition gcd = fab - /gcd/ update
+			condition app1 = fab - /([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+}) ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+})) $/ update
+			condition app2 = fab - /{[a-zA-zα-ωΑ-Ω_]+\$((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+}))}/ update
+			condition app = app1 or app2 update
+			condition comparisongang = fab - /(==)|(≠)|( >)|(<)|(≥)|(≤)|(eqz)|(gtz)|(ltz)|(sgn)|(abs)|(swi)/ update
+			condition unaryminus = fab - /~/ update
+		condition error = fab - /ERROR/ update
+		#object regex
+		#((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+}))
+		while continue2 {
+
+			copy fab previous2
+
+			embroider fab -p " "
+			embroider fab -a " "
+			while app {
+				#most complicated bit
+
+				#if we have a function, and then a value, start matching parenthases!!!!
+				alter fab -g / ([a-zA-zα-ωΑ-Ω_]+)=>{(((?!:=)[^;])+)} ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+})) \$ / " \1=>{\2}𐔐𐔞 \4 $ "
+
+				condition matching = fab - /𐔐/ update
+				while matching {
+					#if we hit the start, something has gone wrong; error
+					alter fab -g /^𐔐/ " «UNMATCHED BRACES ERROR» "
+					#otherwise, if we have a right brace, increase the counter
+					alter fab -g /}(𐔐+)/ "\1𐔐}"
+					#otherwise, if we have a left brace, decrease the counter
+					alter fab -g /{𐔐(𐔐+)/ "\1{"
+
+					#at this point, if the counter == 1 and we have hit a left brace, ( like this: " 𐔐{ { } } " ) transform the pointer into the selection character and stop matching braces
+					alter fab -g /([^𐔐])𐔐{/ "\1𖩞{"
+
+					#otherwise, if we have anything else, keep the counter the same
+					alter fab -g /(.)(𐔐+)/ "\2\1"
+				}
+				#convert brace-matched functions to replacement mode
+				alter fab -g / ([a-zA-zα-ωΑ-Ω_]+)=>𖩞{(((?!:=)[^;\n])+)}𐔞 ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;\n])+})) \$ / " {\1$\4}{\2} "
+				#if we have a string in replacement mode, replace the stuff inside with the stuff outside
+				alter fab -g / {(?P<V>[a-zA-zα-ωΑ-Ω_]+)\$((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+}))}{(.*) (?P=V) (.*)} / " {\1$\2}{ \6 \2 \7 } "
+				#if we have a string in replacement mode with *no* matching strings, return the stuff inside in parens
+				alter fab -g / {(?P<V>[a-zA-zα-ωΑ-Ω_]+)\$((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+}))}{ (((?! (?P=V) ).)+) } / " ( \6 ) "
+			}
+			if exp {
+				alter fab -g / (–?\|+0) –(\|+0) \^ / " |0 \1 \2 ^ ÷ "
+				alter fab -g / (–?\|+0) (\|+0) \^ / " \1 \1 \2 |0 - ^ * "
+				alter fab -g / (–?\|+0) 0 \^ / " |0 "
+				alter fab -g / 0 (–?\|+0) \^ / " 0 "
+				alter fab -g / 0 0 \^ / " |0 "
+			}
+			if mul {
+				alter fab -g / –(\|*0) –(\|*0) \* / " \1 \2 * "
+				alter fab -g / (\|*0) –(\|*0) \* / " \1 \2 * ~ "
+				alter fab -g / –(\|*0) (\|*0) \* / " \1 \2 * ~ "
+				alter fab -g / (\|*0) (\|*0) \* / " 𐒂\1 \2 * "
+				alter fab -g / (\|*)𐒂\|(\|*)(0) (\|+)0 \* / " \1\4𐒂\2\3 \4\3 * "
+				alter fab -g / (\|*)𐒂(0) (\|+)0 \* / " \1\2 "
+				alter fab -g / (\|*0) 0 \* / " 0 "
+			}
+			if div {
+				alter fab -g / 〖(.*?) (–\|+0) (\|+0) ÷ (.*?)〗 / " \1 0 \4 "
+				alter fab -g / 〖(.*?) (\|+0) (–\|+0) ÷ (.*?)〗 / " \1 0 \4 "
+				alter fab -g / 〖(.*?) (–\|+0) (–\|+0) ÷ (.*?)〗 / " \1 0 \4 "
+				alter fab -g / –(\|+0) –(\|+0) ÷ / " 〖 \1 \2 ÷ 〗 "
+				alter fab -g / (\|+0) –(\|+0) ÷ / " 〖 \1 \2 ÷ ~ 〗 "
+				alter fab -g / –(\|+0) (\|+0) ÷ / " 〖 \1 \2 ÷ ~ 〗 "
+				alter fab -g / (\|+0) (\|+0) ÷ / " |0 \1 \2 - \2 ÷ + "
+				alter fab -g / 0 (\|+0) ÷ / " 0 "
+				alter fab -g / (\|+0) 0 ÷ / " «DIVISION BY ZERO ERROR» "
+				alter fab -g / 0 0 ÷ / " «DIVISION BY ZERO ERROR» "
+			}
+			if add {
+				alter fab -g / –(\|+0) –(\|+0) \+ / " \1 \2 + ~ "
+				alter fab -g / (\|+0) –(\|+0) \+ / " \1 \2 - "
+				alter fab -g / –(\|+0) (\|+0) \+ / " \2 \1 - "
+				alter fab -g / (\|+)0 (\|+0) \+ / " \1\2 "
+				alter fab -g / 0 (\|+0) \+ / " \1 "
+				alter fab -g / (\|+0) 0 \+ / " \1 "
+				alter fab -g / 0 0 \+ / " 0 "
+				alter fab -g / \( (–?\|+0) \+ \) / " \1 "
+			}
+			if sub {
+				alter fab -g / –(\|+0) –(\|+0) - / " \1 \2 - ~ "
+				alter fab -g / (\|+0) –(\|+0) - / " \1 \2 + "
+				alter fab -g / –(\|+0) (\|+0) - / " \1 \2 + ~ "
+
+				alter fab -g / 0 (\|+0) - / " –\1 "
+				alter fab -g / (\|+0) 0 - / " \1 "
+				alter fab -g / 0 0 - / " 0 "
+
+				alter fab -g / (?P<V>\|*)(\|*?)0 (?P=V)(\|*?)0 - / " \2 𐭹 0 \3 𐭹 0 - "
+			}
+			
+			if gcd {
+				alter fab -g / –(\|+0) (–?\|+0) gcd / " \1 \2 gcd "
+				alter fab -g / (–?\|+0) –(\|+0) gcd / " \1 \2 gcd "
+				alter fab -g / (\|+0) 0 gcd / " \1 "
+				alter fab -g / (\|+0) 0 gcd / " \1 "
+				alter fab -g / (\|*0) (\|+0) gcd / " \2 \1 \2 mod gcd "
+			}
+			if lcm {
+				alter fab -g / –(\|+0) (–?\|+0) lcm / " \1 \2 lcm "
+				alter fab -g / (–?\|+0) –(\|+0) lcm / " \1 \2 lcm "
+				alter fab -g / 0 0 lcm / " 0 "
+				alter fab -g / (\|*0) (\|*0) lcm / " \2 \1 \1 \2 gcd ÷ *"
+			}
+			alter fab -g / (–?\|*0) (–?\|*0) mod / " \1 \1 \2 ÷ \2 * - "
+
+			if comparisongang {
+				alter fab -g / (–?\|*0) (–?\|*0) == / " \1 \2 - eqz "
+				alter fab -g / (–?\|*0) (–?\|*0) ≠ / " \1 \2 == eqz "
+				alter fab -g / (–?\|*0) (–?\|*0) < / " \2 \1 - gtz "
+				alter fab -g / (–?\|*0) (–?\|*0) > / " \1 \2 - gtz "
+				alter fab -g / (–?\|*0) (–?\|*0) ≤ / " \1 \2 < \1 \2 == + gtz "
+				alter fab -g / (–?\|*0) (–?\|*0) ≥ / " \1 \2 > \1 \2 == + gtz "
+
+				alter fab -g / 0 eqz / " |0 "
+				alter fab -g / –?\|+0 eqz / " 0 "
+
+				alter fab -g / 0 gtz / " 0 "
+				alter fab -g / \|+0 gtz / " |0 "
+				alter fab -g / –\|+0 gtz / " 0 "
+
+				alter fab -g / 0 ltz / " 0 "
+				alter fab -g / \|+0 ltz / " 0 "
+				alter fab -g / –\|+0 ltz / " |0 "
+
+				alter fab -g / 0 sgn / " 0 "
+				alter fab -g / \|+0 sgn / " |0 "
+				alter fab -g / –\|+0 sgn / " –|0 "
+
+				alter fab -g / –?(\|*0) abs / " \1 "
+
+				condition swi = fab - /𖩄/ update
+				#better group matching to make recursive functions possible
+				alter fab -g / ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+})|[a-zA-zα-ωΑ-Ω_]+) (\(.+\)) (–?\|*0) swi / " \1 \5𖩄𖩁 \6 swi "
+				alter fab -g / (\(.+\)) ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+})|[a-zA-zα-ωΑ-Ω_]+) (–?\|*0) swi / " \1𖩄𖩁 \2 \6 swi "
+				alter fab -g / (\(.+\)) (\(.+\)) (–?\|*0) swi / " \1𖩄𖩁 \2𖩄𖩁 \3 swi "
+				while swi {
+					alter fab -g /^𖩄/ " «UNMATCHED PARENTHASES ERROR» "
+					alter fab -g /\)(𖩄+)/ "\1𖩄)"
+					alter fab -g /\(𖩄(𖩄+)/ "\1("
+
+					alter fab -g /([^𖩄])𖩄\(/ "\1𖩂("
+
+					alter fab -g /(.)(𖩄+)/ "\2\1"
+				}
+				alter fab -g / ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+})|[a-zA-zα-ωΑ-Ω_]+|𖩂.+𖩁) ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+})|[a-zA-zα-ωΑ-Ω_]+|𖩂.+𖩁) –\|+0 swi / " \5 "
+				alter fab -g / ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+})|[a-zA-zα-ωΑ-Ω_]+|𖩂.+𖩁) ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+})|[a-zA-zα-ωΑ-Ω_]+|𖩂.+𖩁) 0 swi / " \5 "
+				alter fab -g / ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+})|[a-zA-zα-ωΑ-Ω_]+|𖩂.+𖩁) ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+})|[a-zA-zα-ωΑ-Ω_]+|𖩂.+𖩁) \|+0 swi / " \1 "
+				alter fab -g /[𖩂𖩄𖩁]/ " "
+			}
+
+			if ack {
+				alter fab -g / –\|+0 \|+0 ack / "«RANGE OUT OF BOUNDS ERROR (-x y ack)»"
+				alter fab -g / \|+0 –\|+0 ack / "«RANGE OUT OF BOUNDS ERROR (x -y ack)»"
+				alter fab -g / –\|+0 –\|+0 ack / "«RANGE OUT OF BOUNDS ERROR (-x -y ack)»"
+				alter fab -g / (\|+0) (\|+0) ack / " \1 |0 - \1 \2 |0 - ack ack "
+				alter fab -g / (\|+0) 0 ack / " \1 |0 - |0 ack "
+				alter fab -g / 0 (\|+0) ack / " \1 |0 + "
+			}
+
+			if pri {
+				alter fab -g / pri / " div eqz "
+
+				alter fab -g / –(\|*0) div / " \1 div "
+				alter fab -g / \|{0,3}0 div / " 0 "
+				alter fab -g / (\|{4,}0) div / " \1 \1 |0 - ☈ℌ "
+
+				alter fab -g / (\|*0) (\|{3,}0) ☈ℌ / " \1 \2 mod eqz \1 \2 |0 - ☈ℌ + "
+				alter fab -g / (\|*0) (\|{2}0) ☈ℌ / " \1 ||0 mod eqz "
+			}
+
+			if fac {
+				alter fab -g / –\|+0 fac / " «RANGE OUT OF BOUNDS ERROR (-x fac)» "
+				alter fab -g / \|{0,1}0 fac / " |0 "
+				alter fab -g / (\|{2,}0) fac / " \1 |0 - fac \1 * "
+			}
+
+			alter fab -g / (\|*0) (\|*0) chs / " \1 fac \2 fac \1 \2 - fac * ÷ "
+
+			if unaryminus {
+				alter fab -g /(\|+0) ~/ "–\1"
+				alter fab -g /–(\|+0) ~/ "\1"
+				alter fab -g /0 ~/ "0"
+			}
+			alter fab -g / 𐭹 / ""
+			#unwrap parenthases
+			alter fab -g /\( ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+})) \)/ " \1 "
+			#add spaces to parenthases to compensate for things
+			alter fab -g /\(/ "( "
+			alter fab -g /{/ "{ "
+			alter fab -g /\)/ " )"
+			alter fab -g /}/ " }"
+			alter fab -g / +/ " "
+
+			if error {
+				alter fab -g /([^«»])*(«.+»)([^«»])*/ "\2"
+				dye fab 1
+				copy fab garment
+				sell
+				stop
+			}
+			alter fab -g /^ +/ ""
+			alter fab -g / +$/ ""
+		}
+		embroider fab -p " "
+		embroider fab -a " "
+		if asg {
+			# delete multiple assigments
+			alter fab -g / (?P<V>[a-zA-zα-ωΑ-Ω_]+) := ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+})) (.*?) (?P=V) := ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+})) (.*)/ " \1 := \4 \3 \5"
+			# replace reference values with evaluated values
+			alter fab -g / (?P<V>[a-zA-zα-ωΑ-Ω_]+) := ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+}))(.*?) (?P=V) (?!:=)(.*)/ " \1 := \2\6 \2 \7 "
+		}
+		alter fab -g /^ +/ ""
+		alter fab -g / +$/ ""
+	}
+
+}
+
+procedure quickeval (fab){
+	do toUnary (fab)
+	do evaluate (fab)
+	do fromUnary (fab)
+}
+
+procedure quickevalHex (fab){
+	do toUnaryHex (fab)
+	do evaluate (fab)
+	do fromUnaryHex (fab)
+}
+
+#embroider test " scale := a=>{ a ||0 * |0 + } ; scale |||0 $ scale ||||0 $ scale |||||0 $ "
+#embroider test " a=>{ b=>{ a b * } } ||0 $ |||0 $ "
+#embroider test " alzero := a=>{ 0 ( alzero a |0 - $ ) a 0 == swi } ; alzero |||0 $ "
+#embroider test " fact := x=>{ |0 ( fact x |0 - $ x * ) x 0 ≤ swi } ; fact ||||0 $ "
+
+#do evaluate (test)
+#copy test garment
+#sell

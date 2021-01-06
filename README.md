@@ -44,8 +44,8 @@ In this table, required arguments are shown in ***bold italic*** and optional ar
 | condition ***name*** = not ***condition*** **update** | Should be self-explanatory.
 | condition ***name*** = ***fabric 1*** == ***fabric 2*** **update** | Checks if ***fabric 1*** and ***fabric 2*** are equal.
 | condition ***name*** = ***condition 1*** ***operation*** ***condition 2*** **update** | Should be self-explanatory. Supported operations are `and`, `or`, and `xor`.
-| if ( ***condition*** ){|Checks if ***condition*** is true and executes code block accordingly.
-| while ( ***condition*** ){|Loops while ***condition*** is true.
+| if ( ***condition*** ){|Checks if ***condition*** is true and executes code block accordingly. The parentheses are optional.
+| while ( ***condition*** ){|Loops while ***condition*** is true. The parentheses are optional.
 | bleach ***fabric*** | Strips ***fabric*** of any ANSI color codes.
 | dye ***fabric color*** |If ***color*** is an integer, this command colors ***fabric*** with the corresponding ANSI color code. Otherwise, the color code used is the value of the fabric ***color.*** In this case, if ***color*** is not a valid fabric or the value of ***color*** is not an integer, the color code used is `255` instead.
 | embroider ***fabric*** **flags** ***string*** | Writes ***string*** to ***fabric.*** Supported flags are `a` and `p`, which respectively append and prepend ***string*** to ***fabric*** instead of overwriting it. In case of `-ap`, both are applied and ***fabric*** is "wrapped" with ***string.***

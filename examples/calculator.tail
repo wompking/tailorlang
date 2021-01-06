@@ -1,4 +1,4 @@
-variation arithmetic.tail
+variation tailormath.tail
 
 embroider test "FIRST"
 condition end = test - /^exit$/ update
@@ -13,14 +13,201 @@ while loop {
 	gather
 	copy materials test
 	condition end = test - /^exit$/ update
+	condition help = test - /^help$/ update
 	condition variables = test - /^vars$/ update
 	condition clear = test - /^clearvars$/ update
-	condition any = test - /^(vars)|(exit)|(clearvars)$/ update
+	condition any = test - /^(vars)|(exit)|(clearvars)|(help)$/ update
 	condition not = not any update
 	if end {
 		stop
 	}
-	do arithmetic.formatAssign (begin)
+	if help {
+		embroider garment "This is a calculator powered by the TailorMath library."
+		dye garment 40
+		sell
+		embroider garment "Calculator commands:"
+		dye garment 40
+		sell
+		embroider garment "   help: Displays this message."
+		dye garment 30
+		sell
+		embroider garment "   exit: Exits the calculator."
+		dye garment 30
+		sell
+		embroider garment "   vars: Lists defined variables and functions."
+		dye garment 30
+		sell
+		embroider garment "   clearvars: Removes all defined variables and functions."
+		dye garment 30
+		sell
+		embroider garment "The calculator takes in an RPN expression, and evaluates it."
+		dye garment 40
+		sell
+		embroider garment "Every symbol should have spaces around it."
+		dye garment 40
+		sell
+		embroider garment "   maybe=>{ ( maybe like this * * ) 3 + } 10 $ 5 ^ "
+		dye garment 30
+		sell
+		embroider garment "Allowed data types are the integer and the function."
+		dye garment 40
+		sell
+		embroider garment "Operations will always return either integers or functions."
+		dye garment 40
+		sell
+		embroider garment "Functions take in exactly one parameter and look like this:"
+		dye garment 40
+		sell
+		embroider garment "   a=>{ a 2 * 1 + }"
+		dye garment 30
+		sell
+		embroider garment "Note that the arrow ( => ) should not have spaces around it."
+		dye garment 40
+		sell
+		embroider garment "Functions can return other functions, so they can be curried, producing functions with multiple parameters."
+		dye garment 40
+		sell
+		embroider garment "Assignments look like this:"
+		dye garment 40
+		sell
+		embroider garment "   one_hundred := 10 10 * ; two_hundred := one_hundred one_hundred + "
+		dye garment 30
+		sell
+		embroider garment "Assignments should be seperated from each other and from the 'main evaluation' with semicolons."
+		dye garment 40
+		sell
+		embroider garment "Note that the expression can compute multiple values at once; for example:"
+		dye garment 40
+		sell
+		embroider garment "   2 3 * 4 5 * 6 7 *"
+		dye garment 30
+		sell
+		embroider garment "   becomes"
+		dye garment 30
+		sell
+		embroider garment "   6 20 42"
+		dye garment 30
+		sell
+		embroider garment "Assignments are saved between multiple calculations, so you can define functions and variables for use later."
+		dye garment 40
+		sell
+		embroider garment "Variable and parameter names consist of uppercase and lowercase Latin and Greek letters, and underscores."
+		dye garment 40
+		sell
+		embroider first "More precisely, they match "
+		dye first 40
+		embroider second "/[a-zA-zα-ωΑ-Ω_]+/."
+		dye second 50
+		copy second -ag /./ first
+		copy first garment
+		sell
+		embroider garment "A list of operators and their arities:"
+		dye garment 40
+		sell
+		embroider garment "   +, 2: Addition."
+		dye garment 30
+		sell
+		embroider garment "   -, 2: Subtraction."
+		dye garment 30
+		sell
+		embroider garment "   *, 2: Multiplication."
+		dye garment 30
+		sell
+		embroider garment "   ÷, 2: Integer division. ( a b ÷ = a / b ) It's typed with ⌥ + / on Mac."
+		dye garment 30
+		sell
+		embroider garment "   ^, 2: Exponentiation. If the second parameter is 0, the answer is 1, and if the second parameter is negative, the answer is 0."
+		dye garment 30
+		sell
+		embroider garment "   $, 2: Function application. ( a b $ = a(b) )"
+		dye garment 30
+		sell
+		embroider garment "   ~, 1: Unary negation."
+		dye garment 30
+		sell
+		embroider garment "   ==, 2: Equality. The next few are numerical comparisons; they do what you think they do. They return 1 if true and 0 if false."
+		dye garment 30
+		sell
+		embroider garment "   ≠, 2"
+		dye garment 30
+		sell
+		embroider garment "   >, 2"
+		dye garment 30
+		sell
+		embroider garment "   <, 2"
+		dye garment 30
+		sell
+		embroider garment "   ≥, 2"
+		dye garment 30
+		sell
+		embroider garment "   ≤, 2"
+		dye garment 30
+		sell
+		embroider garment "   eqz, 1: Equal To,"
+		dye garment 30
+		sell
+		embroider garment "   gtz, 1: Greater Than,"
+		dye garment 30
+		sell
+		embroider garment "   ltz, 1: and Less Than Zero."
+		dye garment 30
+		sell
+		embroider garment "   pri, 1: Check for primality."
+		dye garment 30
+		sell
+		embroider garment "   div, 1: Gets the number of divisors of its input (ignoring 1 and itself)."
+		dye garment 30
+		sell
+		embroider garment "   sgn, 1: Sign."
+		dye garment 30
+		sell
+		embroider garment "   abs, 1: Absolute value."
+		dye garment 30
+		sell
+		embroider garment "   lcm, 2: Least common multiple."
+		dye garment 30
+		sell
+		embroider garment "   gcd, 2: Greatest common divisor."
+		dye garment 30
+		sell
+		embroider garment "   chs, 2: Binomial coefficient, also known as 'n choose k'."
+		dye garment 30
+		sell
+		embroider garment "   fac, 1: Factorial."
+		dye garment 30
+		sell
+		embroider garment "   ack, 2: Ackermann function."
+		dye garment 30
+		sell
+		embroider garment "   swi, 3: Short-circuiting switch statement."
+		dye garment 30
+		sell
+		embroider garment "           In short, 'x y z swi' is equivalent to 'x if z is positive, else y'."
+		dye garment 32
+		sell
+		embroider garment "           The first two arguments of swi should be wrapped in parentheses to avoid errors, although this is not strictly needed."
+		dye garment 32
+		sell
+		embroider garment "           When the third argument of swi is evaluated, it immediately 'chooses' the correct argument out of the first two to return, making this useful for recursive functions."
+		dye garment 32
+		sell
+		embroider garment "A list of internal operators that shouldn't be used but can be:"
+		dye garment 40
+		sell
+		embroider garment "   ☈ℌ, 2: A Sieve of Erathostenes-y helper operator used in the definition of pri and div. In short, it gets the number of divisors of the second argument, but the first argument serves as the 'starting value' in a way."
+		dye garment 30
+		sell
+		embroider garment "A list of other reserved symbols that I won't explain:"
+		dye garment 40
+		sell
+		embroider garment "   𖩞𐔐𐔞𐒂〖〗𐭹𖩂𖩄𖩁«»"
+		dye garment 30
+		sell
+		embroider garment "If you're wondering why something is taking a long time to compute, it's probably because TailorMath is written in unary. Sorry!"
+		dye garment 40
+		sell
+	}
+	do tailormath.formatAssign (begin)
 	if variables {
 		copy begin color
 		dye color 206
@@ -44,14 +231,14 @@ while loop {
 
 		copy begin -pg /./ eval
 
-		do arithmetic.toUnary (eval)
-		do arithmetic.evaluate (eval)
-		do arithmetic.fromUnary (eval)
+		do tailormath.toUnary (eval)
+		do tailormath.evaluate (eval)
+		do tailormath.fromUnary (eval)
 
 		copy eval getVars
 
-		do arithmetic.cutAssign (eval)
-		do arithmetic.getAssign (getVars)
+		do tailormath.cutAssign (eval)
+		do tailormath.getAssign (getVars)
 		alter eval -g / ; $/ ""
 
 		copy getVars -ag /./ begin

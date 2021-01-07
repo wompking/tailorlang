@@ -187,7 +187,7 @@ procedure evaluate (fab){
 		condition continue2 = not finished2 update
 			condition exp = fab - /\^/ update
 			condition mul = fab - /\*/ update
-			condition div = fab - /÷/ update
+			condition div = fab - /[÷Ⳛ]/ update
 			condition add = fab - /\+/ update
 			condition sub = fab - /-/ update
 			condition pri = fab - /(pri)|(div)|(☈ℌ)/ update
@@ -254,16 +254,20 @@ procedure evaluate (fab){
 				alter fab -g / (\|*0) 0 \* / " 0 "
 			}
 			if div {
-				alter fab -g / 〖(.*?) (–\|+0) (\|+0) ÷ (.*?)〗 / " \1 0 \4 "
-				alter fab -g / 〖(.*?) (\|+0) (–\|+0) ÷ (.*?)〗 / " \1 0 \4 "
-				alter fab -g / 〖(.*?) (–\|+0) (–\|+0) ÷ (.*?)〗 / " \1 0 \4 "
-				alter fab -g / –(\|+0) –(\|+0) ÷ / " 〖 \1 \2 ÷ 〗 "
-				alter fab -g / (\|+0) –(\|+0) ÷ / " 〖 \1 \2 ÷ ~ 〗 "
-				alter fab -g / –(\|+0) (\|+0) ÷ / " 〖 \1 \2 ÷ ~ 〗 "
-				alter fab -g / (\|+0) (\|+0) ÷ / " |0 \1 \2 - \2 ÷ + "
-				alter fab -g / 0 (\|+0) ÷ / " 0 "
-				alter fab -g / (\|+0) 0 ÷ / " «DIVISION BY ZERO ERROR» "
+				alter fab -g / 0 –?(\|+0) ÷ / " 0 "
+				alter fab -g / –?(\|+0) 0 ÷ / " «DIVISION BY ZERO ERROR» "
 				alter fab -g / 0 0 ÷ / " «DIVISION BY ZERO ERROR» "
+				alter fab -g / –(\|+0) –(\|+0) ÷ / " \1 \2 ÷ "
+				alter fab -g / (\|+0) –(\|+0) ÷ / " \1 \2 ÷ ~ "
+				alter fab -g / –(\|+0) (\|+0) ÷ / " \1 \2 ÷ ~ "
+				alter fab -g / (\|+0) (\|+0) ÷ / " \2 \1 ÷𐋪 "
+
+				alter fab -g / (\|+0) (Ⳟ*\|*ⲷ*0) ÷𐋪 / " \1 Ⳟ\2 ÷𐋪 " 
+				alter fab -g / ((?P<V>\|+)0) (Ⳟ*)(\|*)(?P=V)(ⲷ*)0 ÷𐋪 / " \1 Ⳟ\4\5ⲷ0 ÷𐋪 "
+				alter fab -g / (\|+0) (Ⳟ{2,})(\|*)(ⲷ*0) ÷𐋪 / " \1 \2\4 ÷𐋪 "
+				alter fab -g / (\|+0) (Ⳟ{2,})(?!\|+)(ⲷⲷ*0) ÷𐋪 / " \3 Ⳛ "
+				alter fab -g / (\|*)ⲷ(ⲷ+)0 Ⳛ / " |\1\2 Ֆ 0 Ⳛ "
+				alter fab -g / (\|*)ⲷ0 Ⳛ / " |\1 Ֆ 0 "
 			}
 			if add {
 				alter fab -g / –(\|+0) –(\|+0) \+ / " \1 \2 + ~ "
@@ -284,7 +288,7 @@ procedure evaluate (fab){
 				alter fab -g / (\|+0) 0 - / " \1 "
 				alter fab -g / 0 0 - / " 0 "
 
-				alter fab -g / (?P<V>\|*)(\|*?)0 (?P=V)(\|*?)0 - / " \2 𐭹 0 \3 𐭹 0 - "
+				alter fab -g / (?P<V>\|*)(\|*?)0 (?P=V)(\|*?)0 - / " \2 Ֆ 0 \3 Ֆ 0 - "
 			}
 			
 			if gcd {
@@ -357,7 +361,14 @@ procedure evaluate (fab){
 			}
 
 			if pri {
-				alter fab -g / pri / " div eqz "
+				embroider previouspri "FIRST"
+				condition finishedpri = fab == previouspri update
+				condition continuepri = not finishedpri update
+				while continuepri {
+					copy fab previouspri
+					alter fab -g / (((?P<V>\|{2,})(?P=V)+)|\|)0 pri / " 0 pri "
+				}
+				alter fab -g / pri / " eqz eqz "
 
 				alter fab -g / –(\|*0) div / " \1 div "
 				alter fab -g / \|{0,3}0 div / " 0 "
@@ -380,7 +391,7 @@ procedure evaluate (fab){
 				alter fab -g /–(\|+0) ~/ "\1"
 				alter fab -g /0 ~/ "0"
 			}
-			alter fab -g / 𐭹 / ""
+			alter fab -g / Ֆ / ""
 			#unwrap parenthases
 			alter fab -g /\( ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+})) \)/ " \1 "
 			#add spaces to parenthases to compensate for things
@@ -430,7 +441,9 @@ procedure quickevalHex (fab){
 #embroider test " a=>{ b=>{ a b * } } ||0 $ |||0 $ "
 #embroider test " alzero := a=>{ 0 ( alzero a |0 - $ ) a 0 == swi } ; alzero |||0 $ "
 #embroider test " fact := x=>{ |0 ( fact x |0 - $ x * ) x 0 ≤ swi } ; fact ||||0 $ "
+#embroider test " 0 pri |0 pri ||0 pri |||0 pri ||||0 pri |||||0 pri ||||||0 pri |||||||0 pri ||||||||0 pri |||||||||0 pri ||||||||||0 pri "
+embroider test " ||||||||0 |||0 ÷ "
 
-#do evaluate (test)
-#copy test garment
+do evaluate (test)
+copy test garment
 #sell

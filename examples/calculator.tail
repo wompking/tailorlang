@@ -152,7 +152,7 @@ while loop {
 		embroider garment "   ltz, 1: and Less Than Zero."
 		dye garment 30
 		sell
-		embroider garment "   pri, 1: Check for primality."
+		embroider garment "   pri, 1: Check for primality. Actually much faster than you'd think."
 		dye garment 30
 		sell
 		embroider garment "   div, 1: Gets the number of divisors of its input (ignoring 1 and itself)."
@@ -168,6 +168,9 @@ while loop {
 		dye garment 30
 		sell
 		embroider garment "   gcd, 2: Greatest common divisor."
+		dye garment 30
+		sell
+		embroider garment "   mod, 2: Modulus."
 		dye garment 30
 		sell
 		embroider garment "   chs, 2: Binomial coefficient, also known as 'n choose k'."
@@ -194,13 +197,13 @@ while loop {
 		embroider garment "A list of internal operators that shouldn't be used but can be:"
 		dye garment 40
 		sell
-		embroider garment "   ☈ℌ, 2: A Sieve of Erathostenes-y helper operator used in the definition of pri and div. In short, it gets the number of divisors of the second argument, but the first argument serves as the 'starting value' in a way."
+		embroider garment "   ☈ℌ, 2: A Sieve of Erathostenes-y helper operator used in the definition of div. In short, it gets the number of divisors of the second argument, but the first argument serves as the 'starting value' in a way."
 		dye garment 30
 		sell
 		embroider garment "A list of other reserved symbols that I won't explain:"
 		dye garment 40
 		sell
-		embroider garment "   𖩞𐔐𐔞𐒂〖〗𐭹𖩂𖩄𖩁«»"
+		embroider garment "   𖩞𐔐𐔞𐒂Ֆ𖩂𖩄𖩁«»ⲷ𐋪Ⳛ"
 		dye garment 30
 		sell
 		embroider garment "If you're wondering why something is taking a long time to compute, it's probably because TailorMath is written in unary. Sorry!"

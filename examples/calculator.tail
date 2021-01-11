@@ -152,13 +152,13 @@ while loop {
 		embroider garment "   ltz, 1: and Less Than Zero."
 		dye garment 30
 		sell
-		embroider garment "   pri, 1: Check for primality. Actually much faster than you'd think."
+		embroider garment "   pri / prime, 1: Check for primality. Actually much faster than you'd think."
 		dye garment 30
 		sell
-		embroider garment "   div, 1: Gets the number of divisors of its input (ignoring 1 and itself)."
+		embroider garment "   div / divisors, 1: Gets the number of divisors of its input (ignoring 1 and itself)."
 		dye garment 30
 		sell
-		embroider garment "   sgn, 1: Sign."
+		embroider garment "   sgn / sign, 1: Sign."
 		dye garment 30
 		sell
 		embroider garment "   abs, 1: Absolute value."
@@ -170,19 +170,19 @@ while loop {
 		embroider garment "   gcd, 2: Greatest common divisor."
 		dye garment 30
 		sell
-		embroider garment "   mod, 2: Modulus."
+		embroider garment "   mod / modulus, 2: Modulus."
 		dye garment 30
 		sell
-		embroider garment "   chs, 2: Binomial coefficient, also known as 'n choose k'."
+		embroider garment "   chs / choose, 2: Binomial coefficient, also known as 'n choose k'."
 		dye garment 30
 		sell
-		embroider garment "   fac, 1: Factorial."
+		embroider garment "   fac / factorial, 1: Factorial."
 		dye garment 30
 		sell
-		embroider garment "   ack, 2: Ackermann function."
+		embroider garment "   ack / ackermann, 2: Ackermann function."
 		dye garment 30
 		sell
-		embroider garment "   swi, 3: Short-circuiting switch statement."
+		embroider garment "   swi / switch / ?, 3: Short-circuiting switch statement."
 		dye garment 30
 		sell
 		embroider garment "           In short, 'x y z swi' is equivalent to 'x if z is positive, else y'."
@@ -192,6 +192,30 @@ while loop {
 		dye garment 32
 		sell
 		embroider garment "           When the third argument of swi is evaluated, it immediately 'chooses' the correct argument out of the first two to return, making this useful for recursive functions."
+		dye garment 32
+		sell
+		embroider garment "   sum / ∑ , 3: Takes two numbers and a function, and applies the function to every integer between the two numbers (inclusive), and sums the resultant numbers."
+		dye garment 30
+		sell
+		embroider garment "   prod / product / ∏ , 3: Same as above, but with multiplication."
+		dye garment 30
+		sell
+		embroider garment "   red / reduce / 𝚸 , 5: Same as above, but with configurable "scrunch" parameters."
+		dye garment 30
+		sell
+		embroider garment "           The format of red is:"
+		dye garment 32
+		sell
+		embroider garment "                   m M f z a red"
+		dye garment 34
+		sell
+		embroider garment "           where m, M, and f are used like the above functions, and z and a act as the 'zero' value and the 'scrunch' function."
+		dye garment 32
+		sell
+		embroider garment "           a should be a two-argument curried function."
+		dye garment 32
+		sell
+		embroider garment "           For example, '5 10 x=>{ x } 0 a=>{ b=>{ a b ^ } } reduce' is equivalent to '0 10 9 8 7 6 5 ^ ^ ^ ^ ^ ^'. "
 		dye garment 32
 		sell
 		embroider garment "A list of internal operators that shouldn't be used but can be:"

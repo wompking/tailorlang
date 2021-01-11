@@ -2,7 +2,7 @@
 
 procedure toUnary (fab){
 
-	#Converts a decimal string to unary, accepting only integers.
+	#Converts a decimal string to unary, and makes aliases, accepting only integers.
 
 	embroider fab -p " "
 	embroider fab -a " "
@@ -24,6 +24,19 @@ procedure toUnary (fab){
 	alter fab -g /-\|/ "–|"
 	alter fab -g /^ +/ ""
 	alter fab -g / +$/ ""
+
+	alter fab -g / (\?|switch) / " swi "
+	alter fab -g / (ackermann) / " ack "
+	alter fab -g / (prime) / " pri "
+	alter fab -g / (divisors) / " div "
+	alter fab -g / (sign) / " sgn "
+	alter fab -g / (modulus) / " mod "
+	alter fab -g / (choose) / " chs "
+	alter fab -g / (factorial) / " fac "
+	alter fab -g / (∑) / " sum "
+	alter fab -g / (product|∏) / " prod "
+	alter fab -g / (reduce|𝚸) / " red "
+	
 }
 
 procedure toUnaryHex (fab){
@@ -186,19 +199,20 @@ procedure evaluate (fab){
 		condition asg = fab - /:=/ update
 		condition continue2 = not finished2 update
 			condition exp = fab - /\^/ update
+			condition redgelikes = fab - / (sum|prod|red) / update
 			condition mul = fab - /\*/ update
 			condition div = fab - /[÷Ⳛ]/ update
 			condition add = fab - /\+/ update
 			condition sub = fab - /-/ update
-			condition pri = fab - /(pri)|(div)|(☈ℌ)/ update
-			condition ack = fab - /ack/ update
-			condition fac = fab - /fac/ update
-			condition lcm = fab - /lcm/ update
-			condition gcd = fab - /gcd/ update
+			condition pri = fab - / (pri)|(div)|(☈ℌ) / update
+			condition ack = fab - / ack / update
+			condition fac = fab - / fac / update
+			condition lcm = fab - / lcm / update
+			condition gcd = fab - / gcd / update
 			condition app1 = fab - /([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+}) ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+})) $/ update
 			condition app2 = fab - /{[a-zA-zα-ωΑ-Ω_]+\$((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+}))}/ update
 			condition app = app1 or app2 update
-			condition comparisongang = fab - /(==)|(≠)|( >)|(<)|(≥)|(≤)|(eqz)|(gtz)|(ltz)|(sgn)|(abs)|(swi)/ update
+			condition comparisongang = fab - / (==)|(≠)|(>)|(<)|(≥)|(≤)|(eqz)|(gtz)|(ltz)|(sgn)|(abs)|(swi) / update
 			condition unaryminus = fab - /~/ update
 		condition error = fab - /ERROR/ update
 		#object regex
@@ -224,7 +238,7 @@ procedure evaluate (fab){
 					#otherwise, if we have a left brace, decrease the counter
 					alter fab -g /{𐔐(𐔐+)/ "\1{"
 
-					#at this point, if the counter == 1 and we have hit a left brace, ( like this: " 𐔐{ { } } " ) transform the pointer into the selection character and stop matching braces
+					#at this point, if the counter == 1 and we have hit a left brace, ( like this: " 𐔐{ { } } " ) tredsform the pointer into the selection character and stop matching braces
 					alter fab -g /([^𐔐])𐔐{/ "\1𖩞{"
 
 					#otherwise, if we have anything else, keep the counter the same
@@ -352,9 +366,9 @@ procedure evaluate (fab){
 			}
 
 			if ack {
-				alter fab -g / –\|+0 \|+0 ack / "«RANGE OUT OF BOUNDS ERROR (-x y ack)»"
-				alter fab -g / \|+0 –\|+0 ack / "«RANGE OUT OF BOUNDS ERROR (x -y ack)»"
-				alter fab -g / –\|+0 –\|+0 ack / "«RANGE OUT OF BOUNDS ERROR (-x -y ack)»"
+				alter fab -g / –\|+0 \|+0 ack / "«REDGE OUT OF BOUNDS ERROR (-x y ack)»"
+				alter fab -g / \|+0 –\|+0 ack / "«REDGE OUT OF BOUNDS ERROR (x -y ack)»"
+				alter fab -g / –\|+0 –\|+0 ack / "«REDGE OUT OF BOUNDS ERROR (-x -y ack)»"
 				alter fab -g / (\|+0) (\|+0) ack / " \1 |0 - \1 \2 |0 - ack ack "
 				alter fab -g / (\|+0) 0 ack / " \1 |0 - |0 ack "
 				alter fab -g / 0 (\|+0) ack / " \1 |0 + "
@@ -379,9 +393,14 @@ procedure evaluate (fab){
 			}
 
 			if fac {
-				alter fab -g / –\|+0 fac / " «RANGE OUT OF BOUNDS ERROR (-x fac)» "
+				alter fab -g / –\|+0 fac / " «REDGE OUT OF BOUNDS ERROR (-x fac)» "
 				alter fab -g / \|{0,1}0 fac / " |0 "
 				alter fab -g / (\|{2,}0) fac / " \1 |0 - fac \1 * "
+			}
+			if redgelikes {
+				alter fab -g / (–?\|*0) (–?\|*0) ([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+}) sum / " ( 0 ) ( \1 1 + \2 \3 sum ) \1 \2 == swi \3 \1 $ + "
+				alter fab -g / (–?\|*0) (–?\|*0) ([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+}) prod / " ( 0 ) ( \1 1 + \2 \3 prod ) \1 \2 == swi \3 \1 $ * "
+				alter fab -g / (–?\|*0) (–?\|*0) ([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+}) (–?\|*0) ([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+}) red / " ( \5 ) ( \1 1 + \2 \3 \5 \6 red ) \1 \2 == swi \3 \1 $ \6 $ $ "
 			}
 
 			alter fab -g / (\|*0) (\|*0) chs / " \1 fac \2 fac \1 \2 - fac * ÷ "

@@ -3,9 +3,14 @@ procedure caps (capitalising){
 	type upper = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
 	replace capitalising -g lower upper
 }
-
+embroider garment "> "
+sell
 gather
 copy materials alter
 do caps (alter)
 copy alter garment
+sell
+
+embroider garment "\n"
+hem garment
 sell

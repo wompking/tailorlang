@@ -1,47 +1,82 @@
+embroider garment "\n> "
+hem garment
+dye garment 50
+sell
 gather
 copy materials edit
 condition help = edit - /^help$/ update
 while help {
-	embroider garment "This is a text formatting engine, originally designed for use in messages."
+	embroider garment "This is a text formatting engine, originally designed for use in Discord messages.\n"
+	hem garment
 	dye garment 40
 	sell
-	embroider garment "To use, seperate your tags (which are case-sensitive) from your message with a pipe:"
+	embroider garment "To use, seperate your tags (which are case-sensitive) from your message with a pipe:\n"
+	hem garment
 	dye garment 40
 	sell
-	embroider garment "    U,e| foobar"
+	embroider garment "    U,e| foobar\n"
+	hem garment
 	dye garment 30
 	sell
-	embroider garment "Tags are evaluated from right to left."
+	embroider garment "Tags are evaluated from right to left.\n"
+	hem garment
 	dye garment 40
 	sell
-	embroider garment "    'e,U| foobar' => 'e| FOOBAR' => '*** F O O B A R ***'"
+	embroider garment "    'e,U| foobar' => 'e| FOOBAR' => '*** F O O B A R ***'\n"
+	hem garment
 	dye garment 30
 	sell
-	embroider garment "A list of tags currently supported:"
+	embroider garment "A list of tags currently supported:\n"
+	hem garment
 	dye garment 40
 	sell
-	embroider garment "    s: for sarcasm, makes your message alternating case like in the Spongebob meme."
+	embroider garment "    s: for sarcasm, makes your message alternating case like in the Spongebob meme.\n"
+	hem garment
 	dye garment 30
 	sell
-	embroider garment "    e: for emphasis, spaces your message out with a space between each character, and wrapping it with three asterisks."
+	embroider garment "    e: for emphasis, spaces your message out with a space between each character, and wrapping it with three asterisks.\n"
+	hem garment
 	dye garment 30
 	sell
-	embroider garment "    U and L: for Upper and Lower case, self-explanatory."
+	embroider garment "    U and L: for Upper and Lower case, self-explanatory.\n"
+	hem garment
 	dye garment 30
 	sell
-	embroider garment "    l: for long, duplicates each character of your message."
+	embroider garment "    l: for long, duplicates each character of your message.\n"
+	hem garment
 	dye garment 30
 	sell
-	embroider garment "    i: for interlace, takes two messages seperated with <|> and intermingles their characters."
+	embroider garment "    o: for obfuscate, wraps each character of your message with two pipes.\n"
+	hem garment
 	dye garment 30
 	sell
-	embroider garment "        For example: 'i| alphabet <|> banana' => 'ablapnhaanbaet'. "
+	embroider garment "    i: for interlace, takes two messages seperated with <|> and intermingles their characters.\n"
+	hem garment
+	dye garment 30
+	sell
+	embroider garment "        For example: 'i| alphabet <|> banana' => 'ablapnhaanbaet'.\n"
+	hem garment
 	dye garment 35
+	sell
+	embroider garment "    n: for nimisin, takes four messages seperated with <|> and puts it in nimisin format.\n"
+	hem garment
+	dye garment 30
+	sell
+	embroider garment "        For example: 'n| toki <|> language, word <|> English <|> talk' => ':nimisin: ***toki*** — language, word\\n← English *talk*'.\n"
+	hem garment
+	dye garment 35
+	sell
+	embroider garment "    d: for Discord edited glitch, takes two messages seperated with <|> and outputs a string that places the Discord (edited) in the middle.\n"
+	hem garment
+	dye garment 30
+	sell
+	embroider garment "\n> "
+	hem garment
+	dye garment 50
 	sell
 	gather
 	copy materials edit	
 }
-
 
 condition repl = edit - /^[a-zA-Z,]+\| / update
 condition sarc = edit - /,s\| / update
@@ -50,6 +85,9 @@ condition uppe = edit - /,U\| / update
 condition lowe = edit - /,L\| / update
 condition long = edit - /,l\| / update
 condition inte = edit - /,i\| / update
+condition nimi = edit - /,n\| / update
+condition obfs = edit - /,o\| / update
+condition dedt = edit - /,d\| / update
 
 condition end_inte = edit - /( ❡ )$/ update
 condition start_inte = edit - /(.{2}❧ )+ ❡ (.❦+)/ update
@@ -110,6 +148,18 @@ while repl {
 		embroider edit -p "| "
 		copy escapes -pg /./ edit
 	}
+	if dedt {
+		alter edit - /^(.*),d\| / "\1| "
+		copy edit -g /^(.*)\| / escapes
+		alter edit -g /^(.*)\| / ""
+
+		alter edit -g /^(.+?) <\|> (.+?)$/ "\\u202B\2 \\u202B\1"
+
+		hem edit
+
+		embroider edit -p "| "
+		copy escapes -pg /./ edit	
+	}
 	if sarc {
 		alter edit - /^(.*),s\| / "\1| "
 		copy edit -g /^(.*)\| / escapes
@@ -158,7 +208,30 @@ while repl {
 		embroider edit -p "| "
 		copy escapes -pg /./ edit
 	}
+	if obfs {
+		alter edit - /^(.*),o\| / "\1| "
+		copy edit -g /^(.*)\| / escapes
+		alter edit -g /^(.*)\| / ""
+
+		alter edit -g /(.)/ "||\1||"
+
+		embroider edit -p "| "
+		copy escapes -pg /./ edit
+	}
+	if nimi {
+		alter edit - /^(.*),n\| / "\1| "
+		copy edit -g /^(.*)\| / escapes
+		alter edit -g /^(.*)\| / ""
+
+		alter edit -g /^(.+?) <\|> (.+?) <\|> (.+?) <\|> (.+?)$/ ":nimisin: ***\1*** — \2 \n← \3 *\4*"
+
+		embroider edit -p "| "
+		copy escapes -pg /./ edit
+	}
 }
 alter edit - /\| / ""
 copy edit garment
+sell
+embroider garment "\n"
+hem garment
 sell

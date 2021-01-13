@@ -10,6 +10,10 @@ condition any = test - /^(vars)|(exit)|(clearvars)$/ update
 condition not = not any update
 embroider begin ""
 while loop {
+	embroider garment "\n> "
+	hem garment
+	dye garment 50
+	sell
 	gather
 	copy materials test
 	condition end = test - /^exit$/ update
@@ -22,215 +26,284 @@ while loop {
 		stop
 	}
 	if help {
-		embroider garment "This is a calculator powered by the TailorMath library."
+		embroider garment "This is a calculator powered by the TailorMath library.\n"
+		hem garment
 		dye garment 40
 		sell
-		embroider garment "Calculator commands:"
+		embroider garment "Calculator commands:\n"
+		hem garment
 		dye garment 40
 		sell
-		embroider garment "   help: Displays this message."
+		embroider garment "   help: Displays this message.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   exit: Exits the calculator."
+		embroider garment "   exit: Exits the calculator.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   vars: Lists defined variables and functions."
+		embroider garment "   vars: Lists defined variables and functions.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   clearvars: Removes all defined variables and functions."
+		embroider garment "   clearvars: Removes all defined variables and functions.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "The calculator takes in an RPN expression, and evaluates it."
+		embroider garment "The calculator takes in an RPN expression, and evaluates it.\n"
+		hem garment
 		dye garment 40
 		sell
-		embroider garment "Every symbol should have spaces around it."
+		embroider garment "Every symbol should have spaces around it.\n"
+		hem garment
 		dye garment 40
 		sell
-		embroider garment "   maybe=>{ ( maybe like this * * ) 3 + } 10 $ 5 ^ "
+		embroider garment "   maybe=>{ ( maybe like this * * ) 3 + } 10 $ 5 ^\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "Allowed data types are the integer and the function."
+		embroider garment "Allowed data types are the integer and the function.\n"
+		hem garment
 		dye garment 40
 		sell
-		embroider garment "Operations will always return either integers or functions."
+		embroider garment "Operations will always return either integers or functions.\n"
+		hem garment
 		dye garment 40
 		sell
-		embroider garment "Functions take in exactly one parameter and look like this:"
+		embroider garment "Functions take in exactly one parameter and look like this:\n"
+		hem garment
 		dye garment 40
 		sell
-		embroider garment "   a=>{ a 2 * 1 + }"
+		embroider garment "   a=>{ a 2 * 1 + }\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "Note that the arrow ( => ) should not have spaces around it."
+		embroider garment "Note that the arrow ( => ) should not have spaces around it.\n"
+		hem garment
 		dye garment 40
 		sell
-		embroider garment "Functions can return other functions, so they can be curried, producing functions with multiple parameters."
+		embroider garment "Functions can return other functions, so they can be curried, producing functions with multiple parameters.\n"
+		hem garment
 		dye garment 40
 		sell
-		embroider garment "Assignments look like this:"
+		embroider garment "Assignments look like this:\n"
+		hem garment
 		dye garment 40
 		sell
-		embroider garment "   one_hundred := 10 10 * ; two_hundred := one_hundred one_hundred + "
+		embroider garment "   one_hundred := 10 10 * ; two_hundred := one_hundred one_hundred + \n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "Assignments should be seperated from each other and from the 'main evaluation' with semicolons."
+		embroider garment "Assignments should be seperated from each other and from the 'main evaluation' with semicolons.\n"
+		hem garment
 		dye garment 40
 		sell
-		embroider garment "Note that the expression can compute multiple values at once; for example:"
+		embroider garment "Note that the expression can compute multiple values at once; for example:\n"
+		hem garment
 		dye garment 40
 		sell
-		embroider garment "   2 3 * 4 5 * 6 7 *"
+		embroider garment "   2 3 * 4 5 * 6 7 *\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   becomes"
+		embroider garment "   becomes\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   6 20 42"
+		embroider garment "   6 20 42\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "Assignments are saved between multiple calculations, so you can define functions and variables for use later."
+		embroider garment "Assignments are saved between multiple calculations, so you can define functions and variables for use later.\n"
+		hem garment
 		dye garment 40
 		sell
-		embroider garment "Variable and parameter names consist of uppercase and lowercase Latin and Greek letters, and underscores."
+		embroider garment "Variable and parameter names consist of uppercase and lowercase Latin and Greek letters, and underscores.\n"
+		hem garment
 		dye garment 40
 		sell
 		embroider first "More precisely, they match "
 		dye first 40
-		embroider second "/[a-zA-zα-ωΑ-Ω_]+/."
+		embroider second "/[a-zA-zα-ωΑ-Ω_]+/.\n"
+		hem second
 		dye second 50
-		copy second -ag /./ first
+		copy second -ag /(.|\n)/ first
 		copy first garment
 		sell
-		embroider garment "A list of operators and their arities:"
+		embroider garment "A list of operators and their arities:\n"
+		hem garment
 		dye garment 40
 		sell
-		embroider garment "   +, 2: Addition."
+		embroider garment "   +, 2: Addition.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   -, 2: Subtraction."
+		embroider garment "   -, 2: Subtraction.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   *, 2: Multiplication."
+		embroider garment "   *, 2: Multiplication.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   ÷, 2: Integer division. ( a b ÷ = a / b ) It's typed with ⌥ + / on Mac."
+		embroider garment "   ÷, 2: Integer division. ( a b ÷ = a / b ) It's typed with ⌥ + / on Mac.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   ^, 2: Exponentiation. If the second parameter is 0, the answer is 1, and if the second parameter is negative, the answer is 0."
+		embroider garment "   ^, 2: Exponentiation. If the second parameter is 0, the answer is 1, and if the second parameter is negative, the answer is 0.\n"
+		hem garment
 		dye garment 30
 		sell
 		embroider garment "   $, 2: Function application. ( a b $ = a(b) )"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   ~, 1: Unary negation."
+		embroider garment "   ~, 1: Unary negation.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   ==, 2: Equality. The next few are numerical comparisons; they do what you think they do. They return 1 if true and 0 if false."
+		embroider garment "   ==, 2: Equality. The next few are numerical comparisons; they do what you think they do. They return 1 if true and 0 if false.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   ≠, 2"
+		embroider garment "   ≠, 2\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   >, 2"
+		embroider garment "   >, 2\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   <, 2"
+		embroider garment "   <, 2\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   ≥, 2"
+		embroider garment "   ≥, 2\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   ≤, 2"
+		embroider garment "   ≤, 2\n"
+		hem garment
 		dye garment 30
 		sell
 		embroider garment "   eqz, 1: Equal To,"
+		hem garment
 		dye garment 30
 		sell
 		embroider garment "   gtz, 1: Greater Than,"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   ltz, 1: and Less Than Zero."
+		embroider garment "   ltz, 1: and Less Than Zero.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   pri / prime, 1: Check for primality. Actually much faster than you'd think."
+		embroider garment "   pri / prime, 1: Check for primality. Actually much faster than you'd think.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   div / divisors, 1: Gets the number of divisors of its input (ignoring 1 and itself)."
+		embroider garment "   div / divisors, 1: Gets the number of divisors of its input (ignoring 1 and itself).\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   sgn / sign, 1: Sign."
+		embroider garment "   sgn / sign, 1: Sign.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   abs, 1: Absolute value."
+		embroider garment "   abs, 1: Absolute value.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   lcm, 2: Least common multiple."
+		embroider garment "   lcm, 2: Least common multiple.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   gcd, 2: Greatest common divisor."
+		embroider garment "   gcd, 2: Greatest common divisor.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   mod / modulus, 2: Modulus."
+		embroider garment "   mod / modulus, 2: Modulus.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   chs / choose, 2: Binomial coefficient, also known as 'n choose k'."
+		embroider garment "   chs / choose, 2: Binomial coefficient, also known as 'n choose k'.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   fac / factorial, 1: Factorial."
+		embroider garment "   fac / factorial, 1: Factorial.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   ack / ackermann, 2: Ackermann function."
+		embroider garment "   ack / ackermann, 2: Ackermann function.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   swi / switch / ?, 3: Short-circuiting switch statement."
+		embroider garment "   swi / switch / ?, 3: Short-circuiting switch statement.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "           In short, 'x y z swi' is equivalent to 'x if z is positive, else y'."
+		embroider garment "           In short, 'x y z swi' is equivalent to 'x if z is positive, else y'.\n"
+		hem garment
 		dye garment 32
 		sell
-		embroider garment "           The first two arguments of swi should be wrapped in parentheses to avoid errors, although this is not strictly needed."
+		embroider garment "           The first two arguments of swi should be wrapped in parentheses to avoid errors, although this is not strictly needed.\n"
+		hem garment
 		dye garment 32
 		sell
-		embroider garment "           When the third argument of swi is evaluated, it immediately 'chooses' the correct argument out of the first two to return, making this useful for recursive functions."
+		embroider garment "           When the third argument of swi is evaluated, it immediately 'chooses' the correct argument out of the first two to return, making this useful for recursive functions.\n"
+		hem garment
 		dye garment 32
 		sell
-		embroider garment "   sum / ∑ , 3: Takes two numbers and a function, and applies the function to every integer between the two numbers (inclusive), and sums the resultant numbers."
+		embroider garment "   sum / ∑ , 3: Takes two numbers and a function, and applies the function to every integer between the two numbers (inclusive), and sums the resultant numbers.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   prod / product / ∏ , 3: Same as above, but with multiplication."
+		embroider garment "   prod / product / ∏ , 3: Same as above, but with multiplication.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "   red / reduce / 𝚸 , 5: Same as above, but with configurable "scrunch" parameters."
+		embroider garment "   red / reduce / 𝚸 , 5: Same as above, but with configurable "scrunch" parameters.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "           The format of red is:"
+		embroider garment "           The format of red is:\n"
+		hem garment
 		dye garment 32
 		sell
-		embroider garment "                   m M f z a red"
+		embroider garment "                   m M f z a red\n"
+		hem garment
 		dye garment 34
 		sell
-		embroider garment "           where m, M, and f are used like the above functions, and z and a act as the 'zero' value and the 'scrunch' function."
+		embroider garment "           where m, M, and f are used like the above functions, and z and a act as the 'zero' value and the 'scrunch' function.\n"
+		hem garment
 		dye garment 32
 		sell
-		embroider garment "           a should be a two-argument curried function."
+		embroider garment "           a should be a two-argument curried function.\n"
+		hem garment
 		dye garment 32
 		sell
-		embroider garment "           For example, '5 10 x=>{ x } 0 a=>{ b=>{ a b ^ } } reduce' is equivalent to '0 10 9 8 7 6 5 ^ ^ ^ ^ ^ ^'. "
+		embroider garment "           For example, '5 10 x=>{ x } 0 a=>{ b=>{ a b ^ } } reduce' is equivalent to '0 10 9 8 7 6 5 ^ ^ ^ ^ ^ ^'.\n"
+		hem garment
 		dye garment 32
 		sell
-		embroider garment "A list of internal operators that shouldn't be used but can be:"
+		embroider garment "A list of internal operators that shouldn't be used but can be:\n"
+		hem garment
 		dye garment 40
 		sell
-		embroider garment "   ☈ℌ, 2: A Sieve of Erathostenes-y helper operator used in the definition of div. In short, it gets the number of divisors of the second argument, but the first argument serves as the 'starting value' in a way."
+		embroider garment "   ☈ℌ, 2: A Sieve of Erathostenes-y helper operator used in the definition of div. In short, it gets the number of divisors of the second argument, but the first argument serves as the 'starting value' in a way.\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "A list of other reserved symbols that I won't explain:"
+		embroider garment "A list of other reserved symbols that I won't explain:\n"
+		hem garment
 		dye garment 40
 		sell
-		embroider garment "   𖩞𐔐𐔞𐒂Ֆ𖩂𖩄𖩁«»ⲷ𐋪Ⳛ"
+		embroider garment "   𖩞𐔐𐔞𐒂Ֆ𖩂𖩄𖩁«»ⲷ𐋪Ⳛ\n"
+		hem garment
 		dye garment 30
 		sell
-		embroider garment "If you're wondering why something is taking a long time to compute, it's probably because TailorMath is written in unary. Sorry!"
+		embroider garment "If you're wondering why something is taking a long time to compute, it's probably because TailorMath is written in unary. Sorry!\n"
+		hem garment
 		dye garment 40
 		sell
 	}

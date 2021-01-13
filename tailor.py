@@ -29,9 +29,12 @@ def tokenisor(prog):
 	for l in program_split:
 		parsing = l+" "
 		line = []
+		#print(l)
 		while parsing != "":
 			if parsing[0] in special:
 				if parsing[0] in sspecial:
+					#print(line)
+					#print(parsing)
 					index = sspecial.index(parsing[0])+2
 					char = sspecial[index]
 					find = parsing.index(char)
@@ -326,7 +329,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 
 
 		elif command == "gather":
-			frame["buffers"]["materials"] = input("Pattern Input: ")
+			frame["buffers"]["materials"] = input()
 			frame["pointer"] += 1
 
 
@@ -336,7 +339,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 
 
 		elif command == "sell":
-			print(frame["buffers"]["garment"])
+			print(frame["buffers"]["garment"],end="")
 			writeval("garment", "buffers", frame, "")
 			frame["pointer"] += 1
 
@@ -554,6 +557,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 			frame['pointer'] += 1
 		elif command == "do":
 			func = getval(line[1], "functions", frame, "")
+			#print(func)
 			code = func["code"][:]
 			args = func["arguments"]
 			params = line[2]

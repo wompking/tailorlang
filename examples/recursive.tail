@@ -1,5 +1,13 @@
+embroider garment "> "
+hem garment
+dye garment 50
+sell
 gather
 copy materials str
+embroider garment "> "
+hem garment
+dye garment 50
+sell
 gather
 copy materials iters
 embroider append "<"
@@ -11,4 +19,7 @@ while some {
 	alter str -g /ZWEI/ "ZWEI Was EINE Initially"
 }
 copy str garment
+sell
+embroider garment "\n"
+hem garment
 sell

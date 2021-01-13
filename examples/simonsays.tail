@@ -1,0 +1,88 @@
+variation tailormath.tail
+
+procedure length (str){
+	alter str -g /./ "|"
+	embroider str -a "0"
+}
+
+procedure cut (str, len){
+	embroider out ""
+	alter len -g /0/ ""
+	condition cutloop = len - /./ update
+	while cutloop {
+		copy str -a /./ out 
+		alter str - /./ ""
+		alter len - /./ ""
+	}
+	copy out str
+}
+
+embroider SQUARE "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n██████████\n██████████\n██████████\n██████████\n██████████"
+hem SQUARE
+embroider SEQUENCE "rgbggy"
+
+type letters = ["r","g","b","y"]
+type colors = ["9,","10,","12,","11,"]
+
+copy SEQUENCE LENGTH
+do length (LENGTH)
+embroider LENGTH -p "|"
+
+
+embroider n "|0"
+
+condition end = n == LENGTH update
+condition loop = not end update
+while loop {
+	copy SEQUENCE cut
+	copy n cutl
+	do cut (cut, cutl)
+	
+	copy cut coloroutput
+	replace coloroutput -g letters colors
+	condition some = coloroutput - /./ update
+	while some {
+		copy coloroutput - /[0-9]+,/ color
+		alter color -g /,/ ""
+		copy SQUARE output
+		dye output color
+		copy output garment
+		sell
+		alter coloroutput -g /^[0-9]+,/ ""
+		embroider wait "5000"
+		do tailormath.toUnary (wait)
+		copy SQUARE garment
+		sell
+		embroider wait "2000"
+		do tailormath.toUnary (wait)
+	}
+	embroider garment "\n> "
+	hem garment
+	dye garment 50
+	sell
+	gather
+	copy materials input
+	alter input -g /R/ "r"
+	alter input -g /G/ "g"
+	alter input -g /B/ "b"
+	alter input -g /Y/ "y"
+	alter input -g /[^rgby]/ ""
+	condition same = input == cut
+	condition diff = not same
+	if diff {
+		embroider work "Oops! Try again.\n"
+		hem work
+		dye work 124
+		copy work garment
+		sell
+		stop
+	}
+
+	embroider n -p "|"
+}
+
+embroider output "Yay! You won!\n"
+hem output
+dye output 112
+copy output garment
+sell

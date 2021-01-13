@@ -461,8 +461,8 @@ procedure quickevalHex (fab){
 #embroider test " alzero := a=>{ 0 ( alzero a |0 - $ ) a 0 == swi } ; alzero |||0 $ "
 #embroider test " fact := x=>{ |0 ( fact x |0 - $ x * ) x 0 ≤ swi } ; fact ||||0 $ "
 #embroider test " 0 pri |0 pri ||0 pri |||0 pri ||||0 pri |||||0 pri ||||||0 pri |||||||0 pri ||||||||0 pri |||||||||0 pri ||||||||||0 pri "
-embroider test " ||||||||0 |||0 ÷ "
+#embroider test " ||||||||0 |||0 ÷ "
 
-do evaluate (test)
-copy test garment
+#do evaluate (test)
+#copy test garment
 #sell

@@ -1,13 +1,13 @@
-variation arithmetic.tail
+variation tailormath.tail
 
 procedure graph (func, xb, yb){
-	do arithmetic.toUnary (func)
-	do arithmetic.toUnary (xb)
+	do tailormath.toUnary (func)
+	do tailormath.toUnary (xb)
 	embroider xb -a " |0 +"
-	do arithmetic.evaluate (xb)
-	do arithmetic.toUnary (yb)
+	do tailormath.evaluate (xb)
+	do tailormath.toUnary (yb)
 	embroider yb -a " |0 +"
-	do arithmetic.evaluate (yb)
+	do tailormath.evaluate (yb)
 
 	embroider xcount "0"
 	embroider ybound "0"
@@ -21,7 +21,7 @@ procedure graph (func, xb, yb){
 
 	while calcall {
 		embroider yb -a " |0 -"
-		do arithmetic.evaluate (yb)
+		do tailormath.evaluate (yb)
 
 		embroider xcount "0"
 		embroider output -p "-"
@@ -39,37 +39,63 @@ procedure graph (func, xb, yb){
 			copy xcount -pg /./ calc
 			embroider calc -p " x := ( "
 
-			do arithmetic.evaluate (calc)
-			do arithmetic.fromUnary (calc)
-			do arithmetic.cutAssign (calc)
+			do tailormath.evaluate (calc)
+			do tailormath.fromUnary (calc)
+			do tailormath.cutAssign (calc)
 
 			embroider char "██"
 			dye char calc
 			copy char -ag /./ output
 
 			embroider xcount -a " |0 +"
-			do arithmetic.evaluate (xcount)	 
+			do tailormath.evaluate (xcount)	 
 		}
+		embroider output -a "\n"
+		hem output
 		copy output garment
 		sell
 		embroider output ""
 	}
 }
 
-embroider garment "Please input an implicit expression to graph."
+embroider garment "Please input an implicit expression to graph, taking x and y as variables.\n"
+hem garment
 dye garment 40
 sell
+embroider garment "> "
+hem garment
+dye garment 50
+sell
+
 gather
 copy materials function
-embroider garment "Please input an upper bound for x, the lower bound being 0."
+
+embroider garment "Please input an upper bound for x, the lower bound being 0.\n"
+hem garment
 dye garment 40
 sell
+embroider garment "> "
+hem garment
+dye garment 50
+sell
+
 gather
 copy materials xin
-embroider garment "Please input an upper bound for y, the lower bound being 0."
+
+embroider garment "Please input an upper bound for y, the lower bound being 0.\n"
+hem garment
 dye garment 40
 sell
+embroider garment "> "
+hem garment
+dye garment 50
+sell
+
 gather
 copy materials yin
 
 do graph (function, xin, yin)
+
+embroider garment "\n"
+hem garment
+sell

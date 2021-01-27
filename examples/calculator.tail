@@ -1,5 +1,7 @@
 variation tailormath.tail
 
+embroider eq " = "
+dye eq 50
 embroider test "FIRST"
 condition end = test - /^exit$/ update
 condition loop = not end update
@@ -154,7 +156,7 @@ while loop {
 		hem garment
 		dye garment 30
 		sell
-		embroider garment "   $, 2: Function application. ( a b $ = a(b) )"
+		embroider garment "   $, 2: Function application. ( a b $ = a(b) )\n"
 		hem garment
 		dye garment 30
 		sell
@@ -186,11 +188,11 @@ while loop {
 		hem garment
 		dye garment 30
 		sell
-		embroider garment "   eqz, 1: Equal To,"
+		embroider garment "   eqz, 1: Equal To,\n"
 		hem garment
 		dye garment 30
 		sell
-		embroider garment "   gtz, 1: Greater Than,"
+		embroider garment "   gtz, 1: Greater Than,\n"
 		hem garment
 		dye garment 30
 		sell
@@ -262,7 +264,7 @@ while loop {
 		hem garment
 		dye garment 30
 		sell
-		embroider garment "   red / reduce / 𝚸 , 5: Same as above, but with configurable "scrunch" parameters.\n"
+		embroider garment "   red / reduce / 𝚸 , 5: Same as above, but with configurable 'scrunch' parameters.\n"
 		hem garment
 		dye garment 30
 		sell
@@ -309,6 +311,17 @@ while loop {
 	}
 	do tailormath.formatAssign (begin)
 	if variables {
+		alter begin -g /;((?!:=)[^;])+;/ ";"
+		alter begin -g /;((?!:=)[^;])+;/ ";"
+		alter begin -g /;((?!:=)[^;])+;/ ";"
+		alter begin -g /;((?!:=)[^;])+;/ ";"
+		alter begin -g /;((?!:=)[^;])+;/ ";"
+		alter begin -g /^((?!:=)[^;])+;/ ""
+		alter begin -g /^((?!:=)[^;])+;/ ""
+		alter begin -g /^((?!:=)[^;])+;/ ""
+		alter begin -g /^((?!:=)[^;])+;/ ""
+		alter begin -g /^((?!:=)[^;])+;/ ""
+		alter begin -g / +/ " "
 		copy begin color
 		dye color 206
 		copy color garment
@@ -322,11 +335,20 @@ while loop {
 		sell
 	}
 	if not {
+		alter begin -g /;((?!:=)[^;])+;/ ";"
+		alter begin -g /;((?!:=)[^;])+;/ ";"
+		alter begin -g /;((?!:=)[^;])+;/ ";"
+		alter begin -g /;((?!:=)[^;])+;/ ";"
+		alter begin -g /;((?!:=)[^;])+;/ ";"
+		alter begin -g /^((?!:=)[^;])+;/ ""
+		alter begin -g /^((?!:=)[^;])+;/ ""
+		alter begin -g /^((?!:=)[^;])+;/ ""
+		alter begin -g /^((?!:=)[^;])+;/ ""
+		alter begin -g /^((?!:=)[^;])+;/ ""
+		alter begin -g / +/ " "
 		copy test eval
 		copy test expr
 		dye expr 92
-		embroider eq " = "
-		dye eq 125
 		copy eq -ag /./ expr
 
 		copy begin -pg /./ eval

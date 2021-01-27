@@ -177,7 +177,7 @@ procedure evaluate (fab){
 	#works.
 	#Variable names consist of uppercase and lowercase Latin and Greek letters, and underscores.
 	#Functions have the syntax:
-		<param≥>{expr}
+		<param>=>{expr}
 	#and only take *one* parameter (same format as variable names), but they can be curried. Also, they might be able to be called recursively but i'm not sure if swi short-circuits properly.
 	#The commands can be found below ↴ .
 	
@@ -209,7 +209,7 @@ procedure evaluate (fab){
 			condition fac = fab - / fac / update
 			condition lcm = fab - / lcm / update
 			condition gcd = fab - / gcd / update
-			condition app1 = fab - /([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+}) ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+})) $/ update
+			condition app1 = fab - /([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+}) ((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+})) \$/ update
 			condition app2 = fab - /{[a-zA-zα-ωΑ-Ω_]+\$((–?\|*0)|([a-zA-zα-ωΑ-Ω_]+=>{((?!:=)[^;])+}))}/ update
 			condition app = app1 or app2 update
 			condition comparisongang = fab - / (==)|(≠)|(>)|(<)|(≥)|(≤)|(eqz)|(gtz)|(ltz)|(sgn)|(abs)|(swi) / update
@@ -462,7 +462,7 @@ procedure quickevalHex (fab){
 #embroider test " fact := x=>{ |0 ( fact x |0 - $ x * ) x 0 ≤ swi } ; fact ||||0 $ "
 #embroider test " 0 pri |0 pri ||0 pri |||0 pri ||||0 pri |||||0 pri ||||||0 pri |||||||0 pri ||||||||0 pri |||||||||0 pri ||||||||||0 pri "
 #embroider test " ||||||||0 |||0 ÷ "
-
+#embroider test " a=>{ b=>{ a ||0 ^ b ||0 ^ + } } ||||0 $ ||||0 $ "
 #do evaluate (test)
 #copy test garment
 #sell

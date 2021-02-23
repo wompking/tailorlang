@@ -177,7 +177,7 @@ procedure evaluate (fab){
 	#works.
 	#Variable names consist of uppercase and lowercase Latin and Greek letters, and underscores.
 	#Functions have the syntax:
-		<param>=>{expr}
+		#<param>=>{expr}
 	#and only take *one* parameter (same format as variable names), but they can be curried. Also, they might be able to be called recursively but i'm not sure if swi short-circuits properly.
 	#The commands can be found below ↴ .
 	

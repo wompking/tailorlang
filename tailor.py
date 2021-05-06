@@ -20,8 +20,8 @@ if len(sys.argv) > 2:
 program = open(sys.argv[1]).read();
 
 def tokenisor(prog):
-	program_split = prog.split("\n")
-	program_split = [l.strip() for l in program_split if not(l == "" or l[0] == "#")]
+	program_split = [l.strip() for l in prog.split("\n")]
+	program_split = [l for l in program_split if not ((l == "") or (l[0] == "#"))]
 	tokenised = []
 	sspecial = ["[","(","]",")"]
 	special = sspecial + ["'",'"',"/"]
@@ -339,7 +339,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 
 
 		elif command == "sell":
-			print(frame["buffers"]["garment"],end="")
+			print(frame["buffers"]["garment"],end="",flush=True)
 			writeval("garment", "buffers", frame, "")
 			frame["pointer"] += 1
 

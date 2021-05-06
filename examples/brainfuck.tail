@@ -4,6 +4,7 @@ dye garment 50
 sell
 gather
 copy materials program
+alter program -g /[^<>\[\]+-.,]/ ""
 embroider program -p "v"
 embroider tape "v0"
 embroider getBuffer ""

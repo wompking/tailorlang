@@ -471,7 +471,7 @@ def interpret(tointerpret,debug,prevframe,prevargs={}):
 				except IndexError:
 					reflag = 0
 				for f in reflags:
-					reflag = reflag | f
+					reflag |= f
 				matches = re.findall(regex, frbuff, reflag)
 				add = ""
 				if "g" in flags:

@@ -78,7 +78,7 @@ def updateBool(name, boollist, bufflist):
 		regex = code[2]
 		reflag = False
 		for f in reflags:
-			reflag == reflag | f
+			reflag |= f
 		matches = re.findall(regex, frbuff, reflag)
 		boollist[name]["value"] = len(matches) > 0
 	elif code[0] == "not":

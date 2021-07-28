@@ -33,7 +33,6 @@ condition getPos = get - /\|/ update
 condition getZer = not getPos update
 #Steps:
 while loop {
-	embroider loop "test"
 	if notHasArrow {
 		embroider tape -ap "00"
 		copy program char
